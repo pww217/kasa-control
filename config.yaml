@@ -1,0 +1,22 @@
+Bulbs:
+  OfficeTop: "10.75.100.141"
+  Office2: "10.75.100.142"
+  Office3: "10.75.100.144"
+  #Porch: "10.75.100.146"
+
+Colors:
+  Red: [0, 100, 36]
+  Blue: [159, 50, 26]
+  Orange: [12, 80, 53]
+    
+Routines:
+  0:
+    Type: smooth_rotate
+    Bulbs: [OfficeTop, Office2, Office3]
+    Colors: [Red, Blue, Orange]
+    Interval: 2
+  1:
+    Type: smooth_rotate
+    Bulbs: [OfficeTop, Office2, Office3]
+    Colors: [Red, Blue]
+    Interval: 3
