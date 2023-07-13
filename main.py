@@ -13,13 +13,15 @@ sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
 
+## Definitions
+
 def read_config(filename):
     with open(filename) as f:
         output = yaml.safe_load(f)
     DEVICE_IPS = output.get("Bulbs")
     COLOR_VALUES = output.get("Colors")
     ROUTINES = output.get("Routines")
-    logger.debug(f"Configuration Ingested:\n\nAvailable Devices:{DEVICE_IPS}\nAvailable Colors:{COLOR_VALUES}\nRoutines:{ROUTINES}\n\n")
+    logger.debug(f"Configuration Imported:\n\nAvailable Devices:{DEVICE_IPS}\nAvailable Colors:{COLOR_VALUES}\nRoutines:{ROUTINES}\n\n")
     return DEVICE_IPS, COLOR_VALUES, ROUTINES
 
 # Routines
@@ -27,20 +29,16 @@ def parse_routine(r):
     type  = r.get("Type")
     bulbs = r.get("Bulbs")
     colors = r.get("Colors")
+    brightness = r.get("Brightness")
     interval = r.get("Interval")
-    logger.info(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors: {colors}\nInterval: {interval}s\n")
+    logger.debug(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors: {colors}\nInterval: {interval}s\n")
     return type, bulbs, colors, interval
 
 async def execute_routine(routine):
-    concurrent_tasks = set()
-    logger.info(f"Beginning routine {routine}\n")
-    type, bulbs, colors, interval = parse_routine(ROUTINES[routine])
+    jobs = set()
+    type, bulbs, colors, interval = parse_routine(routine)
     for b in bulbs:
-        task = asyncio.create_task(smooth_rotate(b, colors, interval))
-        concurrent_tasks.add(task)
-        task.add_done_callback(concurrent_tasks.discard)
-    print(concurrent_tasks)
-    #await smooth_rotate(bulbs, colors, interval)
+        await smooth_rotate(b, colors, interval)
         
 # Lighting Effects
 async def smooth_rotate(device, colors, interval):
@@ -52,15 +50,21 @@ async def smooth_rotate(device, colors, interval):
         await b.set_hsv(hue, sat, val, transition=interval*1000)
         await asyncio.sleep(interval)
         
-
+# Globals from config
 DEVICE_IPS, COLOR_VALUES, ROUTINES = read_config("config.yaml")
 
 async def main():
     #Scheduler = sched.scheduler(time.monotonic, time.sleep)
-    to_schedule = list(range(len(ROUTINES)))
-    for r in to_schedule:
-        await execute_routine(r)
-        
+    routines = set()
+    for i in list(range(len(ROUTINES))):
+        routine = ROUTINES[i]
+        #await execute_routine(routine)
+        # Queue up all routines and execute in parallel
+        jobs = asyncio.create_task(execute_routine(routine))
+        routines.add(jobs)
+        jobs.add_done_callback(routines.discard)
+    logger.info(f"{jobs}")
+    await jobs 
 
 
 if __name__ == "__main__":
