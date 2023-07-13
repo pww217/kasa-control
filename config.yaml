@@ -12,11 +12,11 @@ Colors:
 Routines:
   0:
     Type: smooth_rotate
-    Bulbs: [OfficeTop, Office2, Office3]
-    Colors: [Red, Orange]
+    Bulbs: [Office3]
+    Colors: [Red]
     Interval: 3
   1:
     Type: smooth_rotate
-    Bulbs: [OfficeTop, Office2, Office3]
-    Colors: [Blue, Orange]
+    Bulbs: [OfficeTop]
+    Colors: [Orange]
     Interval: 2
