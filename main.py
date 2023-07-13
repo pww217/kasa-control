@@ -35,8 +35,9 @@ def parse_routine(r):
     return type, bulbs, colors, interval
 
 async def execute_routine(routine):
+    logging.info(f"Executing Routine")
     jobs = set()
-    type, bulbs, colors, interval = parse_routine(routine)
+    type, bulbs, colors, interval = parse_routine(ROUTINES[routine])
     for b in bulbs:
         await smooth_rotate(b, colors, interval)
         
@@ -57,13 +58,12 @@ async def main():
     #Scheduler = sched.scheduler(time.monotonic, time.sleep)
     routines = set()
     for i in list(range(len(ROUTINES))):
-        routine = ROUTINES[i]
         #await execute_routine(routine)
         # Queue up all routines and execute in parallel
-        jobs = asyncio.create_task(execute_routine(routine))
+        jobs = asyncio.create_task(execute_routine(i))
         routines.add(jobs)
         jobs.add_done_callback(routines.discard)
-    logger.info(f"{jobs}")
+    logger.info("Beginning Routines")
     await jobs 
 
 

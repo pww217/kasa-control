@@ -12,20 +12,19 @@ Colors:
 # Routine must be ordered from 0-X without skipping
 # Colors and Brightness can be left blank
 Routines:
-  0:
-    Type: smooth_rotate
+  - Type: smooth_rotate
     Bulbs: [Office3]
     Colors: [Blue, Orange, Red]
     Brightness:
     Interval: 4
-  1:
-    Type: smooth_rotate
+  
+  - Type: smooth_rotate
     Bulbs: [Office2]
     Colors: [Orange, Red, Blue]
     Brightness:
     Interval: 4
-  2:
-    Type: smooth_rotate
+
+  - Type: smooth_rotate
     Bulbs: [OfficeTop]
     Colors: [Red, Blue, Orange]
     Brightness:
