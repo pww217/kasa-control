@@ -6,14 +6,13 @@ from kasa import SmartBulb
 
 ## Logging Configuration
 LOG_LEVEL = logging.INFO
+# Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
 formatter = logging.Formatter("%(message)s")#("%(asctime)s - %(levelname)s: %(message)s")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
-
-## Definitions
 
 def read_config(filename):
     with open(filename) as f:
@@ -35,8 +34,6 @@ def parse_routine(r):
     return type, bulbs, colors, interval
 
 async def execute_routine(routine):
-    logging.info(f"Executing Routine")
-    jobs = set()
     type, bulbs, colors, interval = parse_routine(ROUTINES[routine])
     for b in bulbs:
         await smooth_rotate(b, colors, interval)
@@ -44,12 +41,13 @@ async def execute_routine(routine):
 # Lighting Effects
 async def smooth_rotate(device, colors, interval):
     b = SmartBulb(DEVICE_IPS[device])
-    await b.update()
-    for c in colors:
-        hue, sat, val = COLOR_VALUES[c]
-        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-        await b.set_hsv(hue, sat, val, transition=interval*1000)
-        await asyncio.sleep(interval)
+    while True:
+        await b.update()
+        for c in colors:
+            hue, sat, val = COLOR_VALUES[c]
+            logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
+            await b.set_hsv(hue, sat, val, transition=interval*1000)
+            await asyncio.sleep(interval)
         
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, ROUTINES = read_config("config.yaml")
@@ -63,9 +61,10 @@ async def main():
         jobs = asyncio.create_task(execute_routine(i))
         routines.add(jobs)
         jobs.add_done_callback(routines.discard)
-    logger.info("Beginning Routines")
-    await jobs 
-
+    logger.info(jobs)
+    logger.info("")
+    logger.info(routines)
+    await jobs
 
 if __name__ == "__main__":
     asyncio.run(main())

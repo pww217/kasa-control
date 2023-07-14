@@ -1,2 +1,3 @@
 # kasa-control
-A lightweight scheduling container for custom TP-Link Kasa smart device configuration
+
+Under Construction. In the current iteration this tool can run routines and API calls in parallel. Next step is to add some scheduling capabilities.

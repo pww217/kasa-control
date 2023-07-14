@@ -16,16 +16,16 @@ Routines:
     Bulbs: [Office3]
     Colors: [Blue, Orange, Red]
     Brightness:
-    Interval: 4
+    Interval: 3
   
   - Type: smooth_rotate
     Bulbs: [Office2]
     Colors: [Orange, Red, Blue]
     Brightness:
-    Interval: 4
+    Interval: 3
 
   - Type: smooth_rotate
     Bulbs: [OfficeTop]
     Colors: [Red, Blue, Orange]
     Brightness:
-    Interval: 4
+    Interval: 3
