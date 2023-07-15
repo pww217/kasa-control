@@ -1,7 +1,7 @@
 import yaml
 import asyncio
 import logging
-import sched, time
+#import sched, time
 from kasa import SmartBulb
 
 
