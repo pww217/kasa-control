@@ -23,7 +23,7 @@ Schedules:
 # Routine must be ordered from 0-X without skipping
 # Colors and Brightness can be left blank
 Routines:
-  - Type: hard_rotate
+  - Type: smooth_rotate
     Bulbs: [Office2, Office3, OfficeTop]
     Colors: [Red, Blue, Orange] 
     Brightness: 80

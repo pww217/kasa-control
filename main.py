@@ -26,6 +26,10 @@ def read_config(filename):
 
 # Routines
 def parse_routine(r):
+    # Attempt to compress this.
+    #keys = ["Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
+    #for k keys:
+    #    k = r.get(k)
     type  = r.get("Type")
     bulbs = r.get("Bulbs")
     colors = r.get("Colors")
@@ -36,21 +40,23 @@ def parse_routine(r):
                  {colors}\nInterval: {interval}s; Schedule: {schedule}\n")
     return type, bulbs, colors, brightness, interval, schedule
 
+async def call_api(b, type, colors, brightness, interval):
+    logger.info(f"\nBeginning Routine\n\nType: {type}; Bulb: {b}; Colors:{colors};\nBrightness:{brightness}; Interval:{interval}")
+    if brightness is not None:
+        await set_brightness(b, brightness, interval)
+    match type:
+        case "smooth_rotate":
+            await smooth_rotate(b, colors, interval)
+        case "hard_rotate":
+            await hard_rotate(b, colors, interval)
+
 async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
-    calls = set()
-    for b in bulbs:
-        logger.info(f"\nBeginning Routine\n\nType: {type}; Bulb: {b}; Colors:{colors};\nBrightness:{brightness}; Interval:{interval}")
+    calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
+    logger.info(calls)
+    await asyncio.gather(*calls)
         
-        if brightness is not None:
-            await set_brightness(b, brightness, interval)
-        match type:
-            case "smooth_rotate":
-                await smooth_rotate(b, colors, interval)
-            case "hard_rotate":
-                await hard_rotate(b, colors, interval)
 
-        
 # Lighting Effects
 async def smooth_rotate(device, colors, interval):
     b = SmartBulb(DEVICE_IPS[device])
@@ -67,8 +73,7 @@ async def hard_rotate(device, colors, interval):
     for c in colors:
         hue, sat, val = COLOR_VALUES[c]
         #logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-        await b.set_hsv(hue, sat, val, transition=interval)
-        await asyncio.sleep(interval)
+        await b.set_hsv(hue, sat, val, transition=interval*1000)
 
 async def set_brightness(device, brightness, interval):
     b = SmartBulb(DEVICE_IPS[device])
@@ -81,14 +86,9 @@ async def set_brightness(device, brightness, interval):
 DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = read_config("config.yaml")
 
 async def main():
-    s = sched.scheduler(time.monotonic, time.sleep)
-    routines = set()
-    for i in list(range(len(ROUTINES))):
-        # Queue up all routines and execute in parallel
-        jobs = asyncio.create_task(execute_routine(i))
-        routines.add(jobs)
-        jobs.add_done_callback(routines.discard)
-    await jobs
+    #s = sched.scheduler(time.monotonic, time.sleep)
+    routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
+    await asyncio.gather(*routines)
 
 if __name__ == "__main__":
     asyncio.run(main())
