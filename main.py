@@ -2,11 +2,11 @@ import yaml
 import asyncio
 import logging
 import sched, time
-from suntime import Sun, SunTimeException
 from kasa import SmartBulb
 
+
 ## Logging Configuration
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -16,6 +16,7 @@ sh.setFormatter(formatter)
 logger.addHandler(sh)
 
 def read_config(filename):
+    # New keys can be added here
     keys = ["Bulbs", "Colors", "Routines", "Schedules"]
 
     with open(filename) as f:
@@ -24,49 +25,32 @@ def read_config(filename):
     return DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES
 
 def parse_routine(r):
+    # New keys can be added here
     keys = ["Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
 
     type, bulbs, colors, brightness, interval, schedule = [r.get(k) for k in keys]
-    logger.debug(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors:\
-                 {colors}\nInterval: {interval}s; Schedule: {schedule}\n")
     return type, bulbs, colors, brightness, interval, schedule
 
-async def access_device(device):
-    b = SmartBulb(DEVICE_IPS[device])
+async def call_api(bulb, type, colors, brightness, interval):
+    b = SmartBulb(DEVICE_IPS[bulb])
     await b.update()
-    return b
-
-async def call_api(b, type, colors, brightness, interval):
-    logger.info(f"\nBeginning Routine\n\nType: {type}; Bulb: {b}; Colors:{colors};\nBrightness:{brightness}; Interval:{interval}")
-    if brightness is not None:
-        await set_brightness(b, brightness, interval)
-    await rotate_lights(b, type, colors, interval)
+    match type:
+        case "smooth_rotate":
+            # ms to seconds for smooth transition
+            interval = interval*1000
+    for c in colors:
+        hue, sat = COLOR_VALUES[c]
+        val = brightness
+        await b.set_hsv(hue, sat, val, transition=interval)
+        await asyncio.sleep(interval)
+        logger.debug(f"POST {bulb} at {DEVICE_IPS[bulb]}: Color:{c}; Brightness:{brightness}; Interval:{interval}\n")
 
 async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
     # Similar to main(), gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
+    logger.debug(f"Beginning Routine\n\nType: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n\n")
     await asyncio.gather(*calls)
-        
-
-# Lighting Effects
-async def rotate_lights(device, type, colors, interval):
-    match type:
-        case "smooth_rotate":
-            interval = interval*1000
-    b = await access_device(device)
-    for c in colors:
-        hue, sat, val = COLOR_VALUES[c]
-        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-        await b.set_hsv(hue, sat, val, transition=interval)
-        await asyncio.sleep(interval)
-
-async def set_brightness(device, brightness, interval):
-    b = await access_device(device)
-    logger.debug(f"Changing brightness of {device} to {brightness}")
-    await b.set_brightness(brightness, transition=interval*1000)
-    await asyncio.sleep(interval)
-
         
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = read_config("config.yaml")

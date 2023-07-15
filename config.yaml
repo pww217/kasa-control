@@ -4,10 +4,14 @@ Bulbs:
   Office3: "10.75.100.144"
   Porch: "10.75.100.146"
 
+# Hue, Saturation values
+# See https://web.cs.uni-paderborn.de/cgvb/colormaster/web/color-systems/hsv.html
 Colors:
-  Red: [0, 100, 36]
-  Blue: [159, 50, 26]
-  Orange: [12, 80, 53]
+  Red: [0, 100]
+  Blue: [159, 100]
+  Orange: [12, 100]
+  Green: [129, 100]
+  Violet: [307, 100]
 
 Schedules:
   Overnight:
@@ -25,14 +29,14 @@ Schedules:
 Routines:
   - Type: hard_rotate
     Bulbs: [Office2, Office3]
-    Colors: [Red, Blue, Orange] 
-    Brightness: 100
+    Colors: [Red, Blue, Green, Orange] 
+    Brightness: 10
     Interval: 2
     Schedule:
 
   - Type: hard_rotate
     Bulbs: [OfficeTop]
-    Colors: [Blue, Orange, Red]
-    Brightness: 100
+    Colors: [Blue, Orange, Violet, Red]
+    Brightness: 20
     Interval: 2
     Schedule:
