@@ -2,6 +2,7 @@ import yaml
 import asyncio
 import logging
 import sched, time
+from suntime import Sun, SunTimeException
 from kasa import SmartBulb
 
 ## Logging Configuration
@@ -41,19 +42,18 @@ async def execute_routine(routine):
 # Lighting Effects
 async def smooth_rotate(device, colors, interval):
     b = SmartBulb(DEVICE_IPS[device])
-    while True:
-        await b.update()
-        for c in colors:
-            hue, sat, val = COLOR_VALUES[c]
-            logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-            await b.set_hsv(hue, sat, val, transition=interval*1000)
-            await asyncio.sleep(interval)
+    await b.update()
+    for c in colors:
+        hue, sat, val = COLOR_VALUES[c]
+        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
+        await b.set_hsv(hue, sat, val, transition=interval*1000)
+        await asyncio.sleep(interval)
         
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, ROUTINES = read_config("config.yaml")
 
 async def main():
-    #Scheduler = sched.scheduler(time.monotonic, time.sleep)
+    s = sched.scheduler(time.monotonic, time.sleep)
     routines = set()
     for i in list(range(len(ROUTINES))):
         #await execute_routine(routine)

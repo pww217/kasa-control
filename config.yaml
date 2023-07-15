@@ -9,6 +9,17 @@ Colors:
   Blue: [159, 50, 26]
   Orange: [12, 80, 53]
 
+Schedules:
+  SunriseSunset:
+    - Start: Sunrise
+      End: Sunset
+  Schedule2:
+    - Start:
+      End:
+  Schedule3:
+    - Start:
+      End:
+
 # Routine must be ordered from 0-X without skipping
 # Colors and Brightness can be left blank
 Routines:
@@ -17,15 +28,18 @@ Routines:
     Colors: [Blue, Orange, Red]
     Brightness:
     Interval: 3
+    Schedule:
   
   - Type: smooth_rotate
     Bulbs: [Office2]
     Colors: [Orange, Red, Blue]
     Brightness:
     Interval: 3
+    Schedule:
 
   - Type: smooth_rotate
     Bulbs: [OfficeTop]
     Colors: [Red, Blue, Orange]
     Brightness:
     Interval: 3
+    Schedule:
