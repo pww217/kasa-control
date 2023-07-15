@@ -6,7 +6,7 @@ from kasa import SmartBulb
 
 
 ## Logging Configuration
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -33,15 +33,16 @@ def parse_routine(r):
 
 async def call_api(bulb, type, colors, brightness, interval):
     b = SmartBulb(DEVICE_IPS[bulb])
+    transition = interval
     await b.update()
     match type:
         case "smooth_rotate":
             # ms to seconds for smooth transition
-            interval = interval*1000
+            transition = interval*1000
     for c in colors:
         hue, sat = COLOR_VALUES[c]
         val = brightness
-        await b.set_hsv(hue, sat, val, transition=interval)
+        await b.set_hsv(hue, sat, val, transition=transition)
         await asyncio.sleep(interval)
         logger.debug(f"POST {bulb} at {DEVICE_IPS[bulb]}: Color:{c}; Brightness:{brightness}; Interval:{interval}\n")
 
@@ -49,7 +50,7 @@ async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
     # Similar to main(), gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
-    logger.debug(f"Beginning Routine\n\nType: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n\n")
+    logger.info(f"Beginning Routine\n\nType: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n\n")
     await asyncio.gather(*calls)
         
 # Globals from config
