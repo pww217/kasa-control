@@ -16,25 +16,17 @@ sh.setFormatter(formatter)
 logger.addHandler(sh)
 
 def read_config(filename):
+    keys = ["Bulbs", "Colors", "Routines", "Schedules"]
+
     with open(filename) as f:
         output = yaml.safe_load(f)
-    DEVICE_IPS = output.get("Bulbs")
-    COLOR_VALUES = output.get("Colors")
-    ROUTINES = output.get("Routines")
-    SCHEDULES = output.get("Schedules")
+    DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
     return DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES
 
 def parse_routine(r):
-    # Attempt to compress this.
-    #keys = ["Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
-    #for k keys:
-    #    k = r.get(k)
-    type  = r.get("Type")
-    bulbs = r.get("Bulbs")
-    colors = r.get("Colors")
-    brightness = r.get("Brightness")
-    interval = r.get("Interval")
-    schedule = r.get("Schedule")
+    keys = ["Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
+
+    type, bulbs, colors, brightness, interval, schedule = [r.get(k) for k in keys]
     logger.debug(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors:\
                  {colors}\nInterval: {interval}s; Schedule: {schedule}\n")
     return type, bulbs, colors, brightness, interval, schedule
@@ -48,11 +40,7 @@ async def call_api(b, type, colors, brightness, interval):
     logger.info(f"\nBeginning Routine\n\nType: {type}; Bulb: {b}; Colors:{colors};\nBrightness:{brightness}; Interval:{interval}")
     if brightness is not None:
         await set_brightness(b, brightness, interval)
-    match type:
-        case "smooth_rotate":
-            await smooth_rotate(b, colors, interval)
-        case "hard_rotate":
-            await hard_rotate(b, colors, interval)
+    await rotate_lights(b, type, colors, interval)
 
 async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
@@ -62,17 +50,11 @@ async def execute_routine(routine):
         
 
 # Lighting Effects
-async def smooth_rotate(device, colors, interval):
+async def rotate_lights(device, type, colors, interval):
+    match type:
+        case "smooth_rotate":
+            interval = interval*1000
     b = await access_device(device)
-    for c in colors:
-        hue, sat, val = COLOR_VALUES[c]
-        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-        await b.set_hsv(hue, sat, val, transition=interval*1000)
-        await asyncio.sleep(interval)
-
-async def hard_rotate(device, colors, interval):
-    b = await access_device(device)
-    logging.info(device, colors, interval)
     for c in colors:
         hue, sat, val = COLOR_VALUES[c]
         logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
