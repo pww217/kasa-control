@@ -21,7 +21,8 @@ def read_config(filename):
     DEVICE_IPS = output.get("Bulbs")
     COLOR_VALUES = output.get("Colors")
     ROUTINES = output.get("Routines")
-    logger.debug(f"Configuration Imported:\n\nAvailable Devices:{DEVICE_IPS}\nAvailable Colors:{COLOR_VALUES}\nRoutines:{ROUTINES}\n\n")
+    logger.debug(f"Configuration Imported:\n\nAvailable Devices:{DEVICE_IPS}\n\
+                 Available Colors:{COLOR_VALUES}\nRoutines:{ROUTINES}\n\n")
     return DEVICE_IPS, COLOR_VALUES, ROUTINES
 
 # Routines
@@ -31,11 +32,13 @@ def parse_routine(r):
     colors = r.get("Colors")
     brightness = r.get("Brightness")
     interval = r.get("Interval")
-    logger.debug(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors: {colors}\nInterval: {interval}s\n")
-    return type, bulbs, colors, interval
+    schedule = r.get("Schedule")
+    logger.debug(f"Routine Properties:\n\nType: {type}\nDevices: {bulbs}\nColors:\
+                 {colors}\nInterval: {interval}s; Schedule: {schedule}\n")
+    return type, bulbs, colors, interval, schedule
 
 async def execute_routine(routine):
-    type, bulbs, colors, interval = parse_routine(ROUTINES[routine])
+    type, bulbs, colors, interval, schedule = parse_routine(ROUTINES[routine])
     for b in bulbs:
         await smooth_rotate(b, colors, interval)
         

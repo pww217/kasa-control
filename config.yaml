@@ -10,9 +10,9 @@ Colors:
   Orange: [12, 80, 53]
 
 Schedules:
-  SunriseSunset:
-    - Start: Sunrise
-      End: Sunset
+  Overnight:
+    - Start: Sunset
+      End: Sunrise
   Schedule2:
     - Start:
       End:
