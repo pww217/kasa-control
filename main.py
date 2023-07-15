@@ -24,7 +24,6 @@ def read_config(filename):
     SCHEDULES = output.get("Schedules")
     return DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES
 
-# Routines
 def parse_routine(r):
     # Attempt to compress this.
     #keys = ["Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
@@ -40,6 +39,11 @@ def parse_routine(r):
                  {colors}\nInterval: {interval}s; Schedule: {schedule}\n")
     return type, bulbs, colors, brightness, interval, schedule
 
+async def access_device(device):
+    b = SmartBulb(DEVICE_IPS[device])
+    await b.update()
+    return b
+
 async def call_api(b, type, colors, brightness, interval):
     logger.info(f"\nBeginning Routine\n\nType: {type}; Bulb: {b}; Colors:{colors};\nBrightness:{brightness}; Interval:{interval}")
     if brightness is not None:
@@ -52,34 +56,34 @@ async def call_api(b, type, colors, brightness, interval):
 
 async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
+    # Similar to main(), gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
-    logger.info(calls)
     await asyncio.gather(*calls)
         
 
 # Lighting Effects
 async def smooth_rotate(device, colors, interval):
-    b = SmartBulb(DEVICE_IPS[device])
-    await b.update()
+    b = await access_device(device)
     for c in colors:
         hue, sat, val = COLOR_VALUES[c]
-        #logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
+        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
         await b.set_hsv(hue, sat, val, transition=interval*1000)
         await asyncio.sleep(interval)
 
 async def hard_rotate(device, colors, interval):
-    b = SmartBulb(DEVICE_IPS[device])
-    await b.update()
+    b = await access_device(device)
+    logging.info(device, colors, interval)
     for c in colors:
         hue, sat, val = COLOR_VALUES[c]
-        #logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
-        await b.set_hsv(hue, sat, val, transition=interval*1000)
+        logger.debug(f"Changing {device} to {c}; Hue:{hue}, Sat:{sat}, Val:{val}")
+        await b.set_hsv(hue, sat, val, transition=interval)
+        await asyncio.sleep(interval)
 
 async def set_brightness(device, brightness, interval):
-    b = SmartBulb(DEVICE_IPS[device])
-    await b.update()
-    #logger.debug(f"Changing brightness of {device} to {brightness}")
+    b = await access_device(device)
+    logger.debug(f"Changing brightness of {device} to {brightness}")
     await b.set_brightness(brightness, transition=interval*1000)
+    await asyncio.sleep(interval)
 
         
 # Globals from config
@@ -87,6 +91,7 @@ DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = read_config("config.yaml")
 
 async def main():
     #s = sched.scheduler(time.monotonic, time.sleep)
+    # List comprehension groups all routines for parallel execution
     routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
     await asyncio.gather(*routines)
 

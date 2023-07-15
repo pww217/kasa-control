@@ -23,23 +23,16 @@ Schedules:
 # Routine must be ordered from 0-X without skipping
 # Colors and Brightness can be left blank
 Routines:
-  - Type: smooth_rotate
-    Bulbs: [Office2, Office3, OfficeTop]
+  - Type: hard_rotate
+    Bulbs: [Office2, Office3]
     Colors: [Red, Blue, Orange] 
-    Brightness: 80
+    Brightness: 100
     Interval: 2
     Schedule:
-  
-#  - Type: hard_rotate
-#    Bulbs: [Office2]
-#    Colors: [Orange, Red, Blue]
-#    Brightness: 70
-#    Interval: 3
-#    Schedule:
 
-#  - Type: smooth_rotate
-#    Bulbs: [OfficeTop]
-#    Colors: [Blue, Orange, Red]
-#    Brightness: 100
-#    Interval: 10
-#    Schedule:
+  - Type: hard_rotate
+    Bulbs: [OfficeTop]
+    Colors: [Blue, Orange, Red]
+    Brightness: 100
+    Interval: 2
+    Schedule:
