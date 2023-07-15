@@ -24,10 +24,10 @@ Schedules:
 # Colors and Brightness can be left blank
 Routines:
   - Type: hard_rotate
-    Bulbs: [Office2, Office3]
+    Bulbs: [Office2, Office3, OfficeTop]
     Colors: [Red, Blue, Orange] 
     Brightness: 80
-    Interval: 3
+    Interval: 2
     Schedule:
   
 #  - Type: hard_rotate
@@ -37,9 +37,9 @@ Routines:
 #    Interval: 3
 #    Schedule:
 
-  - Type: hard_rotate
-    Bulbs: [OfficeTop]
-    Colors: [Blue, Orange, Red]
-    Brightness: 100
-    Interval: 3
-    Schedule:
+#  - Type: smooth_rotate
+#    Bulbs: [OfficeTop]
+#    Colors: [Blue, Orange, Red]
+#    Brightness: 100
+#    Interval: 10
+#    Schedule:
