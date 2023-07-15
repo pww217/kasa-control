@@ -8,11 +8,11 @@ Bulbs:
 # [Hue, Saturation] values
 # See https://web.cs.uni-paderborn.de/cgvb/colormaster/web/color-systems/hsv.html
 Colors:
-  Red: [0, 100]
-  Blue: [159, 100]
-  Orange: [12, 100]
-  Green: [129, 100]
-  Violet: [307, 100]
+  Red: [0, 75]
+  Blue: [159, 75]
+  Orange: [12,85]
+  Green: [129, 75]
+  Violet: [307, 75]
 
 # Not yet implemented!
 Schedules:
@@ -30,21 +30,21 @@ Schedules:
 Routines:
   - Type: smooth_rotate
     Bulbs: [OfficeTop]
-    Colors: []
-    Brightness: 60
-    Interval: 2
+    Colors: [Violet, Red, Blue, Orange]
+    Brightness: 80
+    Interval: 3
     Schedule:
 
-  - Type: hard_rotate
+  - Type: smooth_rotate
     Bulbs: [Office2]
-    Colors: [Orange, Violet, Red, Blue] 
-    Brightness: 40
-    Interval: 2
+    Colors: [Orange, Violet, Green, Blue] 
+    Brightness: 60
+    Interval: 3
     Schedule:
 
-  - Type: hard_rotate
-    Bulbs: [Office2, Office3]
-    Colors: [Violet, Red, Blue, Orange] 
-    Brightness: 40
-    Interval: 2
+  - Type: smooth_rotate
+    Bulbs: [Office3]
+    Colors: [Red, Orange, Violet, Red] 
+    Brightness: 80
+    Interval: 3
     Schedule:

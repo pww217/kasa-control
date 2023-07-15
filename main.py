@@ -33,7 +33,7 @@ def parse_routine(r):
 
 async def call_api(bulb, type, colors, brightness, interval):
     b = SmartBulb(DEVICE_IPS[bulb])
-    transition = interval
+    transition = interval # Required due to logic of hard vs smooth rotation
     await b.update()
     match type:
         case "smooth_rotate":
@@ -50,7 +50,7 @@ async def execute_routine(routine):
     type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
     # Similar to main(), gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
-    logger.info(f"Beginning Routine\n\nType: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n\n")
+    logger.info(f"Type: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n")
     await asyncio.gather(*calls)
         
 # Globals from config
@@ -60,6 +60,7 @@ async def main():
     #s = sched.scheduler(time.monotonic, time.sleep)
     # List comprehension groups all routines for parallel execution
     routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
+    logger.info(f"Beginning Routines:\n")
     await asyncio.gather(*routines)
 
 if __name__ == "__main__":
