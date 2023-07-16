@@ -28,21 +28,24 @@ Schedules:
 
 # See readme.MD for details
 Routines:
-  - Type: smooth_rotate
+  - Name: Routine 1
+    Type: smooth_rotate
     Bulbs: [OfficeTop]
     Colors: [Violet, Red, Blue, Orange]
     Brightness: 80
     Interval: 3
     Schedule:
 
-  - Type: smooth_rotate
+  - Name: Routine 2
+    Type: smooth_rotate
     Bulbs: [Office2]
     Colors: [Orange, Violet, Green, Blue] 
     Brightness: 60
     Interval: 3
     Schedule:
 
-  - Type: smooth_rotate
+  - Name: Routine 3
+    Type: smooth_rotate
     Bulbs: [Office3]
     Colors: [Red, Orange, Violet, Red] 
     Brightness: 80
