@@ -1,7 +1,7 @@
 import yaml
 import asyncio
 import logging
-#import sched, time
+import schedule, time
 from kasa import SmartBulb
 
 
@@ -14,6 +14,10 @@ formatter = logging.Formatter("%(levelname)s:%(message)s")#("%(asctime)s - %(lev
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
+
+schedule_logger = logging.getLogger("schedule")
+schedule_logger.setLevel(LOG_LEVEL)
+schedule_logger.addHandler(sh)
 
 def read_config(filename):
     # New keys can be added here

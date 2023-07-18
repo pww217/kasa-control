@@ -16,14 +16,14 @@ Colors:
 
 # Not yet implemented!
 Schedules:
-  Overnight:
-    - Start: Sunset
-      End: Sunrise
-  Schedule2:
-    - Start:
+  - Overnight:
+      Start: [22, 00]
+      End: [6, 00]
+  - Schedule2:
+      Start:
       End:
-  Schedule3:
-    - Start:
+  - Schedule3:
+      Start:
       End:
 
 # See readme.MD for details
