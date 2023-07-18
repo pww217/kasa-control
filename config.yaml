@@ -16,13 +16,13 @@ Colors:
 
 # Not yet implemented!
 Schedules:
-  - Overnight:
+  Overnight:
       Start: [22, 00]
       End: [6, 00]
-  - Schedule2:
+  Schedule2:
       Start:
       End:
-  - Schedule3:
+  Schedule3:
       Start:
       End:
 

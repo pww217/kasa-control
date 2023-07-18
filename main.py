@@ -52,23 +52,28 @@ async def call_api(bulb, type, colors, brightness, interval):
 
 async def execute_routine(routine):
     name, type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
-    # Similar to main(), gather all API calls for a routine and execute in parallel
+    # Similar to schedule_routines(), gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
     logger.info(f"Running {name}\n")
     logger.debug(f"Type: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n")
     await asyncio.gather(*calls)
     logger.info(f"{name} complete.\n")
         
+async def schedule_routines():
+    keys = [k for k in SCHEDULES]
+    # List comprehension groups all routines for parallel execution
+    routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
+    await asyncio.gather(*routines)
+
+
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 
+
 async def main():
-    #s = sched.scheduler(time.monotonic, time.sleep)
-    # List comprehension groups all routines for parallel execution
-    logger.info(f"Beginning Routines:\n")
     #while True:
-    routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
-    await asyncio.gather(*routines)
+    await schedule_routines()
+    await asyncio.sleep(5)
 
 if __name__ == "__main__":
     asyncio.run(main())
