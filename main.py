@@ -6,7 +6,7 @@ from kasa import SmartBulb
 
 
 ## Logging Configuration
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -58,22 +58,24 @@ async def execute_routine(routine):
     logger.debug(f"Type: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n")
     await asyncio.gather(*calls)
     logger.info(f"{name} complete.\n")
-        
-async def schedule_routines():
-    keys = [k for k in SCHEDULES]
-    # List comprehension groups all routines for parallel execution
-    routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
-    await asyncio.gather(*routines)
-
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 
+def job(s):
+    print(s)
 
-async def main():
-    #while True:
-    await schedule_routines()
-    await asyncio.sleep(5)
+def main():
+    #keys = [k for k in SCHEDULES]
+    # List comprehension groups all routines for parallel execution
+    #routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
+    schedule.every(3).seconds.do(job, 'hello')
+    while True:
+        #job = asyncio.gather(*routines)
+        #schedule.every(5).seconds.do(job)
+        schedule.run_pending()
+        time.sleep(1)
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

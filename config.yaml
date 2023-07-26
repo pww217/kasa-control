@@ -19,12 +19,12 @@ Schedules:
   Overnight:
       Start: [22, 00]
       End: [6, 00]
-  Schedule2:
-      Start:
-      End:
-  Schedule3:
-      Start:
-      End:
+#  Schedule2:
+#      Start:
+#      End:
+#  Schedule3:
+#      Start:
+#      End:
 
 # See readme.MD for details
 Routines:
