@@ -17,11 +17,11 @@ Colors:
 # Not yet implemented!
 Schedules:
   Overnight:
-      Start: [22, 00]
-      End: [6, 00]
-#  Schedule2:
-#      Start:
-#      End:
+      Start: '22:00'
+      End: '6:00'
+  Schedule2:
+      Start: '2:00'
+      End: '12:30'
 #  Schedule3:
 #      Start:
 #      End:
@@ -34,7 +34,7 @@ Routines:
     Colors: [Violet, Red, Blue, Orange]
     Brightness: 80
     Interval: 3
-    Schedule:
+    Schedule: Overnight
 
   - Name: Routine 2
     Type: smooth_rotate
@@ -42,7 +42,7 @@ Routines:
     Colors: [Orange, Violet, Green, Blue] 
     Brightness: 60
     Interval: 3
-    Schedule:
+    Schedule: Overnight
 
   - Name: Routine 3
     Type: smooth_rotate
@@ -50,4 +50,4 @@ Routines:
     Colors: [Red, Orange, Violet, Red] 
     Brightness: 80
     Interval: 3
-    Schedule:
+    Schedule: Schedule2

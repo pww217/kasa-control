@@ -50,29 +50,33 @@ async def call_api(bulb, type, colors, brightness, interval):
         logger.debug(f" POST {bulb}@{DEVICE_IPS[bulb]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
         await asyncio.sleep(interval)
 
-async def execute_routine(routine):
-    name, type, bulbs, colors, brightness, interval, schedule = parse_routine(ROUTINES[routine])
-    # Similar to schedule_routines(), gather all API calls for a routine and execute in parallel
+def execute_routine(routine):
+    name, type, bulbs, colors, brightness, interval, schedule = parse_routine(routine)
+    # Gather all API calls for a routine and execute in parallel
     calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
     logger.info(f"Running {name}\n")
     logger.debug(f"Type: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n")
-    await asyncio.gather(*calls)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.gather(*calls))
     logger.info(f"{name} complete.\n")
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 
-def job(s):
-    print(s)
+def schedule_routine(routine):
+    start = SCHEDULES[routine["Schedule"]]["Start"]
+    end   = SCHEDULES[routine["Schedule"]]["End"]
+    #schedule.every(2).seconds.do(print, "hello")
+    schedule.every(1).seconds.do(execute_routine, routine=routine)
+    #s = schedule.every().day.at(routine["Start"]).do(asyncio.run(execute_routine, routine=routine))
 
 def main():
-    #keys = [k for k in SCHEDULES]
     # List comprehension groups all routines for parallel execution
     #routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
-    schedule.every(3).seconds.do(job, 'hello')
+    for r in ROUTINES:
+        schedule_routine(r)
     while True:
         #job = asyncio.gather(*routines)
-        #schedule.every(5).seconds.do(job)
         schedule.run_pending()
         time.sleep(1)
 
