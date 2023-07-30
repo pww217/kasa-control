@@ -29,12 +29,28 @@ def read_config(filename):
     DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
     return DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES
 
-def parse_routine(routine):
-    sched, devices = [routine.get(k) for k in ["Schedule", "Devices"]]
-    return sched, devices
+def parse_call(device):
+    
+    return type, colors, brightness, interval
 
-async def call_api(bulb, type, colors, brightness, interval):
-    b = SmartBulb(DEVICE_IPS[bulb])
+def schedule_routine(routine):
+    start = SCHEDULES[routine["Schedule"]]["Start"]
+    end   = SCHEDULES[routine["Schedule"]]["End"]
+    #schedule.every(2).seconds.do(print, "hello")
+    schedule.every(1).seconds.do(execute_routine, routine=routine)
+    #s = schedule.every().day.at(routine["Start"]).do(asyncio.run(execute_routine, routine=routine))
+
+def execute_routine(routine):
+    devices = routine.get("Devices")
+    calls = [call_api(routine, d) for d in devices]
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.gather(*calls))
+
+async def call_api(routine, device):
+    r = routine["Devices"][device]
+    type, colors, brightness, interval = [r[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
+    print(type, colors, brightness, interval)
+    b = SmartBulb(DEVICE_IPS[device])
     transition = interval # Required due to logic of hard vs smooth rotation
     await b.update()
     match type:
@@ -45,34 +61,17 @@ async def call_api(bulb, type, colors, brightness, interval):
         hue, sat = COLOR_VALUES[c]
         val = brightness
         await b.set_hsv(hue, sat, val, transition=transition)
-        logger.debug(f" POST {bulb}@{DEVICE_IPS[bulb]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
+        logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
         await asyncio.sleep(interval)
-
-def execute_routine(routine):
-    name, type, bulbs, colors, brightness, interval, schedule = parse_routine(routine)
-    # Gather all API calls for a routine and execute in parallel
-    calls = [call_api(b, type, colors, brightness, interval) for b in bulbs]
-    logger.info(f"Running {name}\n")
-    logger.debug(f"Type: {type}\nDevices: {bulbs}\nColors:{colors}\nBrightness:{brightness}\nInterval:{interval}\nSchedule:{schedule}\n")
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.gather(*calls))
-    logger.info(f"{name} complete.\n")
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
-
-def schedule_routine(routine):
-    start = SCHEDULES[routine["Schedule"]]["Start"]
-    end   = SCHEDULES[routine["Schedule"]]["End"]
-    #schedule.every(2).seconds.do(print, "hello")
-    schedule.every(1).seconds.do(execute_routine, routine=routine)
-    #s = schedule.every().day.at(routine["Start"]).do(asyncio.run(execute_routine, routine=routine))
 
 def main():
     # List comprehension groups all routines for parallel execution
     #routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
     for r in ROUTINES:
-        parse_routine(r)
+        execute_routine(r)
         #schedule_routine(r)
     #while True:
         #job = asyncio.gather(*routines)
