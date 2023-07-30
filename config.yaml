@@ -28,26 +28,20 @@ Schedules:
 
 # See readme.MD for details
 Routines:
-  - Name: Routine 1
-    Type: smooth_rotate
-    Bulbs: [OfficeTop]
-    Colors: [Violet, Red, Blue, Orange]
-    Brightness: 80
-    Interval: 3
-    Schedule: Overnight
-
-  - Name: Routine 2
-    Type: smooth_rotate
-    Bulbs: [Office2]
-    Colors: [Orange, Violet, Green, Blue] 
-    Brightness: 60
-    Interval: 3
-    Schedule: Overnight
-
-  - Name: Routine 3
-    Type: smooth_rotate
-    Bulbs: [Office3]
-    Colors: [Red, Orange, Violet, Red] 
-    Brightness: 80
-    Interval: 3
-    Schedule: Schedule2
+  - Schedule: Overnight
+    Devices:
+      OfficeTop:
+        Type: smooth_rotate
+        Colors: [Violet, Red, Blue, Orange]
+        Brightness: 80
+        Interval: 3 
+      Office2:
+        Type: smooth_rotate
+        Colors: [Orange, Violet, Red, Blue]
+        Brightness: 80
+        Interval: 3 
+      Office3:
+        Type: smooth_rotate
+        Colors: [Blue, Orange, Violet, Red]
+        Brightness: 80
+        Interval: 3 

@@ -3,6 +3,7 @@ import asyncio
 import logging
 import schedule, time
 from kasa import SmartBulb
+from pprint import pprint
 
 
 ## Logging Configuration
@@ -28,12 +29,9 @@ def read_config(filename):
     DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
     return DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES
 
-def parse_routine(r):
-    # New keys can be added here
-    keys = ["Name", "Type", "Bulbs", "Colors", "Brightness", "Interval", "Schedule"]
-
-    name, type, bulbs, colors, brightness, interval, schedule = [r.get(k) for k in keys]
-    return name, type, bulbs, colors, brightness, interval, schedule
+def parse_routine(routine):
+    sched, devices = [routine.get(k) for k in ["Schedule", "Devices"]]
+    return sched, devices
 
 async def call_api(bulb, type, colors, brightness, interval):
     b = SmartBulb(DEVICE_IPS[bulb])
@@ -74,11 +72,12 @@ def main():
     # List comprehension groups all routines for parallel execution
     #routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
     for r in ROUTINES:
-        schedule_routine(r)
-    while True:
+        parse_routine(r)
+        #schedule_routine(r)
+    #while True:
         #job = asyncio.gather(*routines)
-        schedule.run_pending()
-        time.sleep(1)
+        #schedule.run_pending()
+        #time.sleep(1)
 
 
 if __name__ == "__main__":
