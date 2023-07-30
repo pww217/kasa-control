@@ -3,11 +3,10 @@ import asyncio
 import logging
 import schedule, time
 from kasa import SmartBulb
-from pprint import pprint
 
 
 ## Logging Configuration
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -32,7 +31,8 @@ def read_config(filename):
 def schedule_routine(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     end   = SCHEDULES[routine["Schedule"]]["End"]
-    schedule.every(10).seconds.do(execute_routine, routine=routine)
+    schedule.every(30).seconds.do(execute_routine, routine=routine).until("18:00")
+    #schedule.every().day.at(start).do(execute_routine, routine=routine).until(stop)
 
 def execute_routine(routine):
     devices = routine.get("Devices")
@@ -68,6 +68,7 @@ def main():
     while True:
         schedule.run_pending()
         time.sleep(1)
+        print(f"Next run at {schedule.next_run()}")
 
 
 if __name__ == "__main__":
