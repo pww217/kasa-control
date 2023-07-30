@@ -29,27 +29,22 @@ def read_config(filename):
     DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
     return DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES
 
-def parse_call(device):
-    
-    return type, colors, brightness, interval
-
 def schedule_routine(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     end   = SCHEDULES[routine["Schedule"]]["End"]
-    #schedule.every(2).seconds.do(print, "hello")
-    schedule.every(1).seconds.do(execute_routine, routine=routine)
-    #s = schedule.every().day.at(routine["Start"]).do(asyncio.run(execute_routine, routine=routine))
+    schedule.every(10).seconds.do(execute_routine, routine=routine)
 
 def execute_routine(routine):
     devices = routine.get("Devices")
+    # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
+    # Call an event loop and initiate API calls
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(*calls))
 
 async def call_api(routine, device):
-    r = routine["Devices"][device]
-    type, colors, brightness, interval = [r[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
-    print(type, colors, brightness, interval)
+    calls = routine["Devices"][device]
+    type, colors, brightness, interval = [calls[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
     b = SmartBulb(DEVICE_IPS[device])
     transition = interval # Required due to logic of hard vs smooth rotation
     await b.update()
@@ -68,15 +63,11 @@ async def call_api(routine, device):
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 
 def main():
-    # List comprehension groups all routines for parallel execution
-    #routines = [execute_routine(i) for i in list(range(len(ROUTINES)))]
     for r in ROUTINES:
-        execute_routine(r)
-        #schedule_routine(r)
-    #while True:
-        #job = asyncio.gather(*routines)
-        #schedule.run_pending()
-        #time.sleep(1)
+        schedule_routine(r)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":

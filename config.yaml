@@ -34,14 +34,14 @@ Routines:
         Type: smooth_rotate
         Colors: [Violet, Red, Blue, Orange]
         Brightness: 80
-        Interval: 3 
+        Interval: 1 
       Office2:
         Type: smooth_rotate
         Colors: [Orange, Violet, Red, Blue]
         Brightness: 80
-        Interval: 3 
+        Interval: 1 
       Office3:
         Type: smooth_rotate
         Colors: [Blue, Orange, Violet, Red]
         Brightness: 80
-        Interval: 3 
+        Interval: 1 
