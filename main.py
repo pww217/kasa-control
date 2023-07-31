@@ -1,12 +1,13 @@
 import yaml
 import asyncio
 import logging
+from datetime import datetime, timedelta
 import schedule, time
 from kasa import SmartBulb
-
+from pprint import pprint
 
 ## Logging Configuration
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -31,8 +32,12 @@ def read_config(filename):
 def schedule_routine(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     end   = SCHEDULES[routine["Schedule"]]["End"]
-    schedule.every(30).seconds.do(execute_routine, routine=routine).until("18:00")
-    #schedule.every().day.at(start).do(execute_routine, routine=routine).until(stop)
+    delta = datetime.strptime(end, "%H:%M") - datetime.strptime(start, "%H:%M")
+    if delta < timedelta():
+        # Find future time if delta returns past one
+        delta = delta + timedelta(days=1)
+    logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
+    schedule.every().day.at("22:03").do(execute_routine, routine=routine).until("22:04")
 
 def execute_routine(routine):
     devices = routine.get("Devices")
@@ -68,7 +73,7 @@ def main():
     while True:
         schedule.run_pending()
         time.sleep(1)
-        print(f"Next run at {schedule.next_run()}")
+        pprint(f"Next run {round(schedule.idle_seconds())} seconds")
 
 
 if __name__ == "__main__":
