@@ -17,48 +17,39 @@ Colors:
 # Not yet implemented!
 Schedules:
   Overnight:
-      Start: '00:00'
-      End: '06:00'
-  Schedule2:
       Start: '20:00'
-      End: '08:00'
-#  Schedule3:
-#      Start:
-#      End:
+      End: '05:00'
+  Schedule2:
+      Start: '21:28'
+      End: '21:29'
+  Schedule3:
+      Start:
+      End:
 
 # See readme.MD for details
 Routines:
-  - Schedule: Overnight
-    Devices:
-      OfficeTop:
-        Type: smooth_rotate
-        Colors: [Violet, Red, Blue, Orange]
-        Brightness: 80
-        Interval: 1 
-      Office2:
-        Type: smooth_rotate
-        Colors: [Orange, Violet, Red, Blue]
-        Brightness: 80
-        Interval: 1 
-      Office3:
-        Type: smooth_rotate
-        Colors: [Blue, Orange, Violet, Red]
-        Brightness: 80
-        Interval: 1 
   - Schedule: Schedule2
     Devices:
-      OfficeTop:
+      Porch:
         Type: smooth_rotate
-        Colors: [Violet, Red, Blue, Orange]
-        Brightness: 80
-        Interval: 1 
-      Office2:
-        Type: smooth_rotate
-        Colors: [Orange, Violet, Red, Blue]
-        Brightness: 80
-        Interval: 1 
-      Office3:
-        Type: smooth_rotate
-        Colors: [Blue, Orange, Violet, Red]
-        Brightness: 80
-        Interval: 1 
+        Colors: [Violet, Red, Orange]
+        Brightness: 90
+        Interval: 5
+
+#  - Schedule: Schedule2
+#    Devices:
+#      OfficeTop:
+#        Type: smooth_rotate
+#        Colors: [Violet, Red, Blue, Orange]
+#        Brightness: 80
+#        Interval: 1 
+#      Office2:
+#        Type: smooth_rotate
+#        Colors: [Orange, Violet, Red, Blue]
+#        Brightness: 80
+#        Interval: 1 
+#      Office3:
+#        Type: smooth_rotate
+#        Colors: [Blue, Orange, Violet, Red]
+#        Brightness: 80
+#        Interval: 1 

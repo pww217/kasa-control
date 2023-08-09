@@ -11,7 +11,7 @@ LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
-formatter = logging.Formatter("%(levelname)s:%(message)s")#("%(asctime)s - %(levelname)s: %(message)s")
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
@@ -36,11 +36,12 @@ def schedule_routine(routine):
     if delta < timedelta():
         # Find future time if delta returns past one
         delta = delta + timedelta(days=1)
-    logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
-    schedule.every().day.at("22:03").do(execute_routine, routine=routine).until("22:04")
+    #logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
+    schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
 
 def execute_routine(routine):
     devices = routine.get("Devices")
+    logger.info("Executing Routine")
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
@@ -68,12 +69,12 @@ async def call_api(routine, device):
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 
 def main():
-    for r in ROUTINES:
-        schedule_routine(r)
     while True:
+        for r in ROUTINES:
+            schedule_routine(r)
+        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds")
         schedule.run_pending()
         time.sleep(1)
-        pprint(f"Next run {round(schedule.idle_seconds())} seconds")
 
 
 if __name__ == "__main__":
