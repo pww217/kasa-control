@@ -31,10 +31,10 @@ Routines:
   - Schedule: Schedule2
     Devices:
       Porch:
-        Type: smooth_rotate
+        Type: power_off
         Colors: [Violet, Red, Orange]
         Brightness: 90
-        Interval: 5
+        Interval: 10
 
 #  - Schedule: Schedule2
 #    Devices:

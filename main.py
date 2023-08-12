@@ -37,7 +37,8 @@ def schedule_routine(routine):
         # Find future time if delta returns past one
         delta = delta + timedelta(days=1)
     #logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
-    schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
+    #schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
+    schedule.every(30).seconds.do(execute_routine, routine=routine)
 
 def execute_routine(routine):
     devices = routine.get("Devices")
@@ -49,21 +50,23 @@ def execute_routine(routine):
     loop.run_until_complete(asyncio.gather(*calls))
 
 async def call_api(routine, device):
-    calls = routine["Devices"][device]
-    type, colors, brightness, interval = [calls[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
+    call = routine["Devices"][device]
+    type, colors, brightness, interval = [call[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
     b = SmartBulb(DEVICE_IPS[device])
-    transition = interval # Required due to logic of hard vs smooth rotation
+    transition = interval*1000 # ms to seconds for smooth transition
     await b.update()
     match type:
+        case "power_on":
+            await b.turn_on(transition=transition)
+        case "power_off":
+            await b.turn_off(transition=transition)
         case "smooth_rotate":
-            # ms to seconds for smooth transition
-            transition = interval*1000
-    for c in colors:
-        hue, sat = COLOR_VALUES[c]
-        val = brightness
-        await b.set_hsv(hue, sat, val, transition=transition)
-        logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
-        await asyncio.sleep(interval)
+            for c in colors:
+                hue, sat = COLOR_VALUES[c]
+                val = brightness
+                await b.set_hsv(hue, sat, val, transition=transition)
+                logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
+                await asyncio.sleep(interval)
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
