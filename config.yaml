@@ -22,7 +22,7 @@ Schedules:
       Start: '21:28'
       End: '21:29'
   Sunset:
-      Start: '22:00'
+      Start: '17:46'
       End:
   AfterSunset:
       Start:
