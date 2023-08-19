@@ -43,7 +43,8 @@ def schedule_continuous_routines(routine):
 
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
-    schedule.every().day.at(start).do(execute_routine, routine=routine)
+    #schedule.every().day.at(start).do(execute_routine, routine=routine)
+    schedule.every(1).seconds.do(execute_routine, routine=routine)
     logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):

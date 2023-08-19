@@ -1,8 +1,15 @@
 # Your local subnet IP for the smart bulb. Usually you can find this info from your router.
 Bulbs:
+  # Living Room
+  Kitchen: "10.75.100.137"
+  LivingRoom: "10.75.100.133"
+  LivingRoomAux: "10.75.100.134"
+  DiningRoom: "10.75.100.136"
+  # Office
   OfficeTop: "10.75.100.141"
   Office2: "10.75.100.142"
   Office3: "10.75.100.144"
+  # Outdoors
   Porch: "10.75.100.146"
 
 # [Hue, Saturation] values
@@ -33,24 +40,24 @@ Routines:
   - Schedule: Sunset
     Devices:
       OfficeTop:
-        Type: power_on
+        Type: power_off
+        Colors: []
         Brightness: 90
         Interval: 15
-
-#  - Schedule: Schedule2
-#    Devices:
-#      OfficeTop:
-#        Type: smooth_rotate
-#        Colors: [Violet, Red, Blue, Orange]
-#        Brightness: 80
-#        Interval: 1 
-#      Office2:
-#        Type: smooth_rotate
-#        Colors: [Orange, Violet, Red, Blue]
-#        Brightness: 80
-#        Interval: 1 
-#      Office3:
-#        Type: smooth_rotate
-#        Colors: [Blue, Orange, Violet, Red]
-#        Brightness: 80
-#        Interval: 1 
+  - Schedule: Sunset
+    Devices:
+      OfficeTop:
+        Type: smooth_rotate
+        Colors: [Violet, Red, Blue, Orange]
+        Brightness: 80
+        Interval: 1 
+      Office2:
+        Type: smooth_rotate
+        Colors: [Orange, Violet, Red, Blue]
+        Brightness: 80
+        Interval: 1 
+      Office3:
+        Type: smooth_rotate
+        Colors: [Blue, Orange, Violet, Red]
+        Brightness: 80
+        Interval: 1 
