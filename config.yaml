@@ -14,27 +14,28 @@ Colors:
   Green: [129, 75]
   Violet: [307, 75]
 
-# Not yet implemented!
 Schedules:
   Overnight:
       Start: '20:00'
       End: '05:00'
-  Schedule2:
+  BeforeSunset:
       Start: '21:28'
       End: '21:29'
-  Schedule3:
+  Sunset:
+      Start: '22:00'
+      End:
+  AfterSunset:
       Start:
       End:
 
 # See readme.MD for details
 Routines:
-  - Schedule: Schedule2
+  - Schedule: Sunset
     Devices:
-      Porch:
-        Type: power_off
-        Colors: [Violet, Red, Orange]
+      OfficeTop:
+        Type: power_on
         Brightness: 90
-        Interval: 10
+        Interval: 15
 
 #  - Schedule: Schedule2
 #    Devices:

@@ -3,11 +3,12 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 import schedule, time
+#from suntime import Sun, SunTimeException
 from kasa import SmartBulb
 from pprint import pprint
 
 ## Logging Configuration
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -32,17 +33,18 @@ def read_config(filename):
 def schedule_routine(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     end   = SCHEDULES[routine["Schedule"]]["End"]
-    delta = datetime.strptime(end, "%H:%M") - datetime.strptime(start, "%H:%M")
-    if delta < timedelta():
-        # Find future time if delta returns past one
-        delta = delta + timedelta(days=1)
-    #logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
-    #schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
-    schedule.every(30).seconds.do(execute_routine, routine=routine)
+    if end != None: # For continuous jobs
+        delta = datetime.strptime(end, "%H:%M") - datetime.strptime(start, "%H:%M")
+        if delta < timedelta(): # Find future time if delta returns past one
+            delta = delta + timedelta(days=1)
+        schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
+        logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
+    else: # For one-time jobs
+        schedule.every().day.at(start).do(execute_routine, routine=routine)
+        logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):
     devices = routine.get("Devices")
-    logger.info("Executing Routine")
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
@@ -57,6 +59,7 @@ async def call_api(routine, device):
     await b.update()
     match type:
         case "power_on":
+            await b.set_brightness(brightness)
             await b.turn_on(transition=transition)
         case "power_off":
             await b.turn_off(transition=transition)
@@ -65,8 +68,8 @@ async def call_api(routine, device):
                 hue, sat = COLOR_VALUES[c]
                 val = brightness
                 await b.set_hsv(hue, sat, val, transition=transition)
-                logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
                 await asyncio.sleep(interval)
+    logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
@@ -75,9 +78,10 @@ def main():
     while True:
         for r in ROUTINES:
             schedule_routine(r)
-        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds")
+        logger.debug(f"Next run in {round(schedule.idle_seconds())} seconds")
         schedule.run_pending()
         time.sleep(1)
+        logger.info(schedule.get_jobs())
 
 
 if __name__ == "__main__":
