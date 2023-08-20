@@ -1,13 +1,14 @@
 import yaml
 import asyncio
 import logging
+from pprint import pformat
 from datetime import datetime, timedelta
 import schedule, time
 from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 
 ## Logging Configuration
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -48,23 +49,30 @@ def schedule_sun_routine(start, char):
         offset = float(offset)
     if char == "-": # Negate offset if requested
         offset = -offset
-    if time == "Sunrise":
+    if time.lower() == "sunrise":
         final = (SUNRISE + timedelta(hours=offset)).strftime('%H:%M')
-        logger.info(f"Time: {time}; Operation: {char}; Offset: {offset}h")
-    elif time == "Sunset":
+        logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
+    elif time.lower() == "sunset":
         final = (SUNSET + timedelta(hours=offset)).strftime('%H:%M')
-        logger.info(f"Time: {time}; Operation: {char}; Offset: {offset}h")
+        logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
     return final, offset
     
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     if "sun" in start.lower():
         if "-" in start:
-            schedule_sun_routine(start, "-")
+            final, offset = schedule_sun_routine(start, "-")
+            schedule.every().day.at(final).do(execute_routine, routine=routine)
+            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
         elif "+" in start:
-            schedule_sun_routine(start, "+")
+            final, offset = schedule_sun_routine(start, "+")
+            schedule.every().day.at(final).do(execute_routine, routine=routine)
+            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
         else:
-            schedule_sun_routine(start, None)
+            final, offset = schedule_sun_routine(start, None)
+            print(final)
+            schedule.every().day.at(final).do(execute_routine, routine=routine)
+            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
     else:
         schedule.every().day.at(start).do(execute_routine, routine=routine)
         logger.debug(f"{routine} Start: {start}")
@@ -129,10 +137,10 @@ def main():
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
                 schedule_continuous_routines(r)
-        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds\n")
+        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds")
         schedule.run_pending()
         time.sleep(1)
-        logger.debug(f"{schedule.get_jobs()}\n")
+        logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
         #schedule.run_all()
         #break
 

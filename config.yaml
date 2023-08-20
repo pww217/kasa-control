@@ -31,12 +31,18 @@ Schedules:
   AfterSunset:
       Start: Sunset+1
       End:
-  Overnight:
-      Start: Sunset
-      End: Sunrise
+  LateNight:
+      Start: Sunrise-4
+      End:
+  Sunrise:
+      Start: Sunrise
+      End:
   StartWorkday:
       Start: '08:30'
       End:
+  Overnight:
+      Start: Sunset
+      End: Sunrise
 
 Routines:
   - Schedule: StartWorkday
@@ -74,6 +80,21 @@ Routines:
         Colors: []
         Brightness: 50
         Interval: 10
+      OfficeTop:
+        Type: power_on
+        Colors: []
+        Brightness: 30
+        Interval: 10
+      Office2:
+        Type: power_on
+        Colors: []
+        Brightness: 20
+        Interval: 10
+      Office3:
+        Type: power_on
+        Colors: []
+        Brightness: 45
+        Interval: 10
 
   - Schedule: Sunset
     Devices:
@@ -99,6 +120,24 @@ Routines:
         Type: set_brightness
         Colors: []
         Brightness: 10
+        Interval: 10
+      Porch:
+        Type: turn_on
+        Colors: []
+        Brightness: 100
+        Interval: 15
+
+  - Schedule: LateNight
+    Devices:
+      Porch:
+        Type: set_brightness
+        Colors: []
+        Brightness: 25
+        Interval: 10
+      LivingRoomAux:
+        Type: turn_off
+        Colors: []
+        Brightness: 0
         Interval: 10
 
 #  - Schedule: Schedule2
