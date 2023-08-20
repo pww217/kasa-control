@@ -137,7 +137,8 @@ def main():
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
                 schedule_continuous_routines(r)
-        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds")
+        time_until = round(schedule.idle_seconds())
+        logger.info(f"Next run in {time_until//60} minutes at {schedule.next_run()}")
         schedule.run_pending()
         time.sleep(1)
         logger.debug(f"\n{pformat(schedule.get_jobs())}\n")

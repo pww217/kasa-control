@@ -137,7 +137,15 @@ Routines:
       LivingRoomAux:
         Type: turn_off
         Colors: []
-        Brightness: 0
+        Brightness:
+        Interval: 10
+
+  - Schedule: Sunrise
+    Devices:
+      Porch:
+        Type: turn_off
+        Colors: []
+        Brightness:
         Interval: 10
 
 #  - Schedule: Schedule2
