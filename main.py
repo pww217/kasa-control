@@ -78,6 +78,9 @@ async def call_api(routine, device):
         case "power_off":
             await b.turn_off(transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n")
+        case "set_brightness":
+            await b.set_brightness(brightness, transition=transition)
+            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n")
         case "smooth_rotate":
             for c in colors:
                 hue, sat = COLOR_VALUES[c]

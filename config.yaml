@@ -40,10 +40,10 @@ Routines:
   - Schedule: Sunset
     Devices:
       DiningRoom:
-        Type: power_on
+        Type: set_brightness
         Colors: []
         Brightness: 30
-        Interval: 15
+        Interval: 5
 #  - Schedule: Schedule2
 #    Devices:
 #      OfficeTop:
