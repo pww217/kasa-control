@@ -32,18 +32,18 @@ Schedules:
       Start: '17:46'
       End:
   AfterSunset:
-      Start:
+      Start: '20:00'
       End:
 
 # See readme.MD for details
 Routines:
-  - Schedule: Sunset
+  - Schedule: AfterSunset
     Devices:
       DiningRoom:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 30
-        Interval: 5
+        Interval: 10
 #  - Schedule: Schedule2
 #    Devices:
 #      OfficeTop:

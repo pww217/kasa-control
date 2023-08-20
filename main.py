@@ -3,7 +3,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 import schedule, time
-#from suntime import Sun, SunTimeException
+from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 from pprint import pprint
 
@@ -42,8 +42,7 @@ def schedule_continuous_routines(routine):
 
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
-    #schedule.every().day.at(start).do(execute_routine, routine=routine)
-    schedule.every(2).seconds.do(execute_routine, routine=routine)
+    schedule.every().day.at(start).do(execute_routine, routine=routine)
     logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):
@@ -90,12 +89,25 @@ async def call_api(routine, device):
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
+sun = Sun(30.271041325306694, -97.74181978453979)
+
+SUNRISE = sun.get_local_sunrise_time()
+SUNSET = sun.get_local_sunset_time()
+
+logger.info(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
 
 def main():
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
-    schedule.run_all()
+    while True:
+        for r in ROUTINES:
+            if SCHEDULES[r["Schedule"]]["End"] != None:
+                schedule_continuous_routines(r)
+        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds\n")
+        schedule.run_pending()
+        time.sleep(1)
+        logger.info(f"{schedule.get_jobs()}\n")
 
 
 
