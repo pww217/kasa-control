@@ -40,7 +40,7 @@ def schedule_continuous_routines(routine):
         delta = delta + timedelta(days=1)
     schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
 
-def schedule_sun_routine(start, char):
+def schedule_sun_routine(start, char, routine):
     if char == None: # For when no offset
         time = start
         offset = 0
@@ -55,24 +55,18 @@ def schedule_sun_routine(start, char):
     elif time.lower() == "sunset":
         final = (SUNSET + timedelta(hours=offset)).strftime('%H:%M')
         logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
-    return final, offset
+    schedule.every().day.at(final).do(execute_routine, routine=routine)
+    logger.debug(f"{routine} Start: {final}; Offset: {offset}")
     
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     if "sun" in start.lower():
         if "-" in start:
-            final, offset = schedule_sun_routine(start, "-")
-            schedule.every().day.at(final).do(execute_routine, routine=routine)
-            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
+            schedule_sun_routine(start, "-", routine)
         elif "+" in start:
-            final, offset = schedule_sun_routine(start, "+")
-            schedule.every().day.at(final).do(execute_routine, routine=routine)
-            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
+            schedule_sun_routine(start, "+", routine)
         else:
-            final, offset = schedule_sun_routine(start, None)
-            print(final)
-            schedule.every().day.at(final).do(execute_routine, routine=routine)
-            logger.debug(f"{routine} Start: {final}; Offset: {offset}")
+            schedule_sun_routine(start, None, routine)
     else:
         schedule.every().day.at(start).do(execute_routine, routine=routine)
         logger.debug(f"{routine} Start: {start}")
