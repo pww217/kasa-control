@@ -1,9 +1,6 @@
-import yaml
-import asyncio
-import logging
+import yaml, asyncio, logging, schedule, time
 from pprint import pformat
 from datetime import datetime, timedelta
-import schedule, time
 from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 
@@ -114,6 +111,8 @@ async def call_api(routine, device):
                 await b.set_hsv(hue, sat, val, transition=transition)
                 await asyncio.sleep(interval)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
+
+
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 sun = Sun(30.271041325306694, -97.74181978453979)
