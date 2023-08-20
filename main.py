@@ -7,7 +7,7 @@ from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 
 ## Logging Configuration
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
@@ -39,24 +39,43 @@ def schedule_continuous_routines(routine):
         delta = delta + timedelta(days=1)
     schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
 
+def schedule_sun_routine(start, char):
+    if char == None: # For when no offset
+        time = start
+        offset = 0
+    else:
+        time, offset = start.split(char) # For offset
+        offset = float(offset)
+    if char == "-": # Negate offset if requested
+        offset = -offset
+    if time == "Sunrise":
+        final = (SUNRISE + timedelta(hours=offset)).strftime('%H:%M')
+        logger.info(f"Time: {time}; Operation: {char}; Offset: {offset}h")
+    elif time == "Sunset":
+        final = (SUNSET + timedelta(hours=offset)).strftime('%H:%M')
+        logger.info(f"Time: {time}; Operation: {char}; Offset: {offset}h")
+    return final, offset
+    
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
-    if start.startswith("Sunrise"):
-        schedule.every().day.at(SUNRISE).do(execute_routine, routine=routine)
-        logger.debug(f"{routine} Start: {SUNRISE}")
-    elif start.startswith("Sunset"):
-        schedule.every().day.at(SUNSET).do(execute_routine, routine=routine)
-        logger.debug(f"{routine} Start: {SUNSET}")
+    if "sun" in start.lower():
+        if "-" in start:
+            schedule_sun_routine(start, "-")
+        elif "+" in start:
+            schedule_sun_routine(start, "+")
+        else:
+            schedule_sun_routine(start, None)
     else:
         schedule.every().day.at(start).do(execute_routine, routine=routine)
         logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):
-    devices = routine.get("Devices")
+    devices = routine["Devices"]
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
     loop = asyncio.get_event_loop()
+    logger.info(f"Executing {routine['Schedule']}")
     loop.run_until_complete(asyncio.gather(*calls))
 
 # API Calls
@@ -97,8 +116,8 @@ async def call_api(routine, device):
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 sun = Sun(30.271041325306694, -97.74181978453979)
 
-SUNRISE = sun.get_local_sunrise_time().strftime('%H:%M')
-SUNSET = sun.get_local_sunset_time().strftime('%H:%M')
+SUNRISE = sun.get_local_sunrise_time()
+SUNSET = sun.get_local_sunset_time()
 
 logger.debug(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
 
