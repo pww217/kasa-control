@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta
 import schedule, time
 #from suntime import Sun, SunTimeException
-from kasa import SmartBulb
+from kasa import SmartDevice, SmartBulb, SmartDimmer
 from pprint import pprint
 
 ## Logging Configuration
@@ -24,8 +24,7 @@ schedule_logger.addHandler(sh)
 # Config
 def read_config(filename):
     # New keys can be added here
-    keys = ["Bulbs", "Colors", "Routines", "Schedules"]
-
+    keys = ["Devices", "Colors", "Routines", "Schedules"]
     with open(filename) as f:
         output = yaml.safe_load(f)
     DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
@@ -44,7 +43,7 @@ def schedule_continuous_routines(routine):
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     #schedule.every().day.at(start).do(execute_routine, routine=routine)
-    schedule.every(1).seconds.do(execute_routine, routine=routine)
+    schedule.every(2).seconds.do(execute_routine, routine=routine)
     logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):
@@ -59,13 +58,22 @@ def execute_routine(routine):
 async def call_api(routine, device):
     call = routine["Devices"][device]
     type, colors, brightness, interval = [call[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
-    b = SmartBulb(DEVICE_IPS[device])
     transition = interval*1000 # ms to seconds for smooth transition
+    b = SmartDevice(DEVICE_IPS[device])
     await b.update()
+
+    if b.is_color == False:
+        b = SmartDimmer(DEVICE_IPS[device])
+    else:
+        b = SmartBulb(DEVICE_IPS[device])
+    await b.update()
+
     match type:
         case "power_on":
-            await b.set_brightness(brightness)
-            await b.turn_on(transition=transition)
+            await b.set_brightness(1)
+            await b.update()
+            await b.turn_on()
+            await b.set_brightness(brightness, transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n")
         case "power_off":
             await b.turn_off(transition=transition)
@@ -84,14 +92,8 @@ def main():
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
-    while True:
-        for r in ROUTINES:
-            if SCHEDULES[r["Schedule"]]["End"] != None:
-                schedule_continuous_routines(r)
-        logger.info(f"Next run in {round(schedule.idle_seconds())} seconds\n")
-        schedule.run_pending()
-        time.sleep(1)
-        logger.info(f"{schedule.get_jobs()}\n")
+    schedule.run_all()
+
 
 
 if __name__ == "__main__":
