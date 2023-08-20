@@ -23,27 +23,27 @@ Colors:
 
 Schedules:
   Overnight:
-      Start: '20:00'
-      End: '05:00'
+      Start: Sunset
+      End: Sunrise
   BeforeSunset:
-      Start: '21:28'
-      End: '21:29'
+      Start: Sunset-1h30m
+      End:
   Sunset:
-      Start: '17:46'
+      Start: Sunset
       End:
   AfterSunset:
-      Start: '20:00'
+      Start: Sunset+1h
       End:
 
 # See readme.MD for details
 Routines:
-  - Schedule: AfterSunset
+  - Schedule: Sunset
     Devices:
       DiningRoom:
-        Type: power_on
+        Type: power_off
         Colors: []
-        Brightness: 30
-        Interval: 10
+        Brightness: 
+        Interval: 3
 #  - Schedule: Schedule2
 #    Devices:
 #      OfficeTop:

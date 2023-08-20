@@ -5,14 +5,13 @@ from datetime import datetime, timedelta
 import schedule, time
 from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
-from pprint import pprint
 
 ## Logging Configuration
 LOG_LEVEL = logging.DEBUG
 # Main module logger
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
@@ -42,8 +41,15 @@ def schedule_continuous_routines(routine):
 
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
-    schedule.every().day.at(start).do(execute_routine, routine=routine)
-    logger.debug(f"{routine} Start: {start}")
+    if start.startswith("Sunrise"):
+        schedule.every().day.at(SUNRISE).do(execute_routine, routine=routine)
+        logger.debug(f"{routine} Start: {SUNRISE}")
+    elif start.startswith("Sunset"):
+        schedule.every().day.at(SUNSET).do(execute_routine, routine=routine)
+        logger.debug(f"{routine} Start: {SUNSET}")
+    else:
+        schedule.every().day.at(start).do(execute_routine, routine=routine)
+        logger.debug(f"{routine} Start: {start}")
 
 def execute_routine(routine):
     devices = routine.get("Devices")
@@ -91,10 +97,10 @@ async def call_api(routine, device):
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
 sun = Sun(30.271041325306694, -97.74181978453979)
 
-SUNRISE = sun.get_local_sunrise_time()
-SUNSET = sun.get_local_sunset_time()
+SUNRISE = sun.get_local_sunrise_time().strftime('%H:%M')
+SUNSET = sun.get_local_sunset_time().strftime('%H:%M')
 
-logger.info(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
+logger.debug(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
 
 def main():
     for r in ROUTINES:
@@ -107,8 +113,9 @@ def main():
         logger.info(f"Next run in {round(schedule.idle_seconds())} seconds\n")
         schedule.run_pending()
         time.sleep(1)
-        logger.info(f"{schedule.get_jobs()}\n")
-
+        logger.debug(f"{schedule.get_jobs()}\n")
+        #schedule.run_all()
+        #break
 
 
 if __name__ == "__main__":
