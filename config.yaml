@@ -74,58 +74,45 @@ Routines:
         Type: power_on
         Colors: []
         Brightness: 20
-        Interval: 10
+        Interval: 15
       LivingRoomAux:
         Type: power_on
         Colors: []
         Brightness: 50
-        Interval: 10
+        Interval: 15
       OfficeTop:
         Type: power_on
         Colors: []
         Brightness: 30
-        Interval: 10
+        Interval: 15
       Office2:
         Type: power_on
         Colors: []
         Brightness: 20
-        Interval: 10
+        Interval: 15
       Office3:
         Type: power_on
         Colors: []
         Brightness: 45
-        Interval: 10
+        Interval: 15
 
   - Schedule: Sunset
     Devices:
-      Kitchen:
-        Type: set_brightness
-        Colors: []
-        Brightness: 20
-        Interval: 10
-      LivingRoom:
-        Type: set_brightness
-        Colors: []
-        Brightness: 10
-        Interval: 10
-
-  - Schedule: AfterSunset
-    Devices:
-      Kitchen:
-        Type: set_brightness
-        Colors: []
-        Brightness: 20
-        Interval: 10
-      LivingRoom:
-        Type: set_brightness
-        Colors: []
-        Brightness: 10
-        Interval: 10
       Porch:
         Type: turn_on
         Colors: []
         Brightness: 100
         Interval: 15
+      Kitchen:
+        Type: set_brightness
+        Colors: []
+        Brightness: 20
+        Interval: 10
+      LivingRoom:
+        Type: set_brightness
+        Colors: []
+        Brightness: 10
+        Interval: 10
 
   - Schedule: LateNight
     Devices:
