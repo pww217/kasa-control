@@ -85,9 +85,9 @@ async def call_api(routine, device):
     b = SmartDevice(DEVICE_IPS[device])
     await b.update()
 
-    if b.is_color == False:
+    if b.model == "HS220(US)":
         b = SmartDimmer(DEVICE_IPS[device])
-    else:
+    elif b.model == "KL125(US)":
         b = SmartBulb(DEVICE_IPS[device])
     await b.update()
 
