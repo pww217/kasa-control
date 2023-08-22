@@ -126,6 +126,7 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     counter = 0
+    logger.info("Starting service...")
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
@@ -135,10 +136,11 @@ def main():
         interval = 60
         if counter == interval:
             logger.info(f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}")
+            logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
             counter = 0
+        
         schedule.run_pending()
         time.sleep(1)
-        logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
         counter += 1
 
 
