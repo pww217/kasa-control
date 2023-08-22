@@ -1,15 +1,14 @@
 # Your local subnet IP for the smart bulb. Usually you can find this info from your router.
 Devices:
-  # Living Room
   Kitchen: "10.75.100.137"
   LivingRoom: "10.75.100.133"
   LivingRoomAux: "10.75.100.134"
   DiningRoom: "10.75.100.136"
-  # Office
+
   OfficeTop: "10.75.100.141"
   Office2: "10.75.100.142"
   Office3: "10.75.100.144"
-  # Outdoors
+
   Porch: "10.75.100.146"
 
 # [Hue, Saturation] values
@@ -21,6 +20,10 @@ Colors:
   Green: [129, 75]
   Violet: [307, 75]
 
+# One-time routines should have start times only
+# Continuous routines should have an end
+# For Sunrise schedules, you can use Sunrise or Sunset and 
+# then +/- a float in hours to offset, if desired.
 Schedules:
   BeforeSunset:
       Start: Sunset-1.5
@@ -134,6 +137,9 @@ Routines:
         Colors: []
         Brightness:
         Interval: 10
+
+# Example of a continuous/siren routine that rotates three lights
+# independent of each other but in parallel.
 
 #  - Schedule: Schedule2
 #    Devices:
