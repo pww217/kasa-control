@@ -5,17 +5,16 @@ from suntime import Sun, SunTimeException
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 
 ## Logging Configuration
-LOG_LEVEL = logging.DEBUG
-# Main module logger
+# Main
 logger = logging.getLogger(__name__)
-logger.setLevel(LOG_LEVEL)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 logger.addHandler(sh)
-
+# Schedule
 schedule_logger = logging.getLogger("schedule")
-schedule_logger.setLevel(LOG_LEVEL)
+schedule_logger.setLevel(logging.DEBUG)
 schedule_logger.addHandler(sh)
 
 # Config
@@ -126,17 +125,21 @@ def main():
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
+    counter = 0
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
                 schedule_continuous_routines(r)
+        
         time_until = round(schedule.idle_seconds())
-        logger.info(f"Next run in {(time_until//60)+1} minutes at {schedule.next_run()}")
+        interval = 60
+        if counter == interval:
+            logger.info(f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}")
+            counter = 0
         schedule.run_pending()
         time.sleep(1)
         logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
-        #schedule.run_all()
-        #break
+        counter += 1
 
 
 if __name__ == "__main__":
