@@ -17,3 +17,24 @@ Originally I thought about making it a container that runs as a continuous servi
 ## Configuration
 
 See [config.yaml](./config.yaml) for more information about setting up routines and lights.
+
+## Docker
+
+This is really meant to be run as a Docker container, but really can run on the CLI or in the background on any platform with Python3.
+
+Get the image with `docker pull pww217/kasa-control`
+
+## Docker Compose
+
+Here's an example docker-compose file. Very simple with all storage internal and no real need for fancy networking.
+
+```yaml
+kasa-control:
+      environment:
+            - TZ=America/Chicago
+      container_name: kasa-control
+      restart: unless-stopped
+      image: pww217/kasa-control:latest
+```
+
+Then `docker-compose up -d` to run it as a service.
