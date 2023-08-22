@@ -7,7 +7,7 @@ from kasa import SmartDevice, SmartBulb, SmartDimmer
 ## Logging Configuration
 # Main
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
@@ -91,13 +91,13 @@ async def call_api(routine, device):
     await b.update()
 
     match type:
-        case "power_on":
+        case "on":
             await b.set_brightness(1)
             #await b.update()
             await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n")
-        case "power_off":
+        case "off":
             await b.turn_off(transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n")
         case "set_brightness":
@@ -114,7 +114,9 @@ async def call_api(routine, device):
                 await b.set_hsv(hue, sat, val, transition=transition)
                 await asyncio.sleep(interval)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
-
+        case _:
+            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE. \n")
+            pass
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
