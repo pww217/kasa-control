@@ -93,7 +93,7 @@ async def call_api(routine, device):
     match type:
         case "power_on":
             await b.set_brightness(1)
-            await b.update()
+            #await b.update()
             await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n")
@@ -101,6 +101,10 @@ async def call_api(routine, device):
             await b.turn_off(transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n")
         case "set_brightness":
+            if b.is_off:
+                await b.set_brightness(1)
+                #await b.update()
+                await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
             logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n")
         case "smooth_rotate":
