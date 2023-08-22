@@ -133,7 +133,7 @@ def main():
                 schedule_continuous_routines(r)
         
         time_until = round(schedule.idle_seconds())
-        interval = 60
+        interval = 60*5
         if counter == interval:
             logger.info(f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}")
             logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
