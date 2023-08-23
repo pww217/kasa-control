@@ -102,7 +102,7 @@ Routines:
   - Schedule: Sunset
     Devices:
       Porch:
-        Type: turn_on
+        Type: on
         Colors: []
         Brightness: 100
         Interval: 15
