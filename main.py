@@ -17,6 +17,7 @@ schedule_logger = logging.getLogger("schedule")
 schedule_logger.setLevel(logging.DEBUG)
 schedule_logger.addHandler(sh)
 
+
 # Config
 def read_config(filename):
     # New keys can be added here
@@ -26,34 +27,37 @@ def read_config(filename):
     DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
     return DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES
 
+
 # Scheduling
 def schedule_continuous_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
-    end   = SCHEDULES[routine["Schedule"]]["End"]
+    end = SCHEDULES[routine["Schedule"]]["End"]
     delta = datetime.strptime(end, "%H:%M") - datetime.strptime(start, "%H:%M")
     logger.debug(f"{routine} Start: {start}; End: {end}, Delta {delta}")
-    if delta < timedelta(): # Find future time if delta returns past one
+    if delta < timedelta():  # Find future time if delta returns past one
         delta = delta + timedelta(days=1)
     schedule.every().day.at(start).until(delta).do(execute_routine, routine=routine)
 
+
 def schedule_sun_routine(start, char, routine):
-    if char == None: # For when no offset
+    if char == None:  # For when no offset
         time = start
         offset = 0
     else:
-        time, offset = start.split(char) # For offset
+        time, offset = start.split(char)  # For offset
         offset = float(offset)
-    if char == "-": # Negate offset if requested
+    if char == "-":  # Negate offset if requested
         offset = -offset
     if time.lower() == "sunrise":
-        final = (SUNRISE + timedelta(hours=offset)).strftime('%H:%M')
+        final = (SUNRISE + timedelta(hours=offset)).strftime("%H:%M")
         logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
     elif time.lower() == "sunset":
-        final = (SUNSET + timedelta(hours=offset)).strftime('%H:%M')
+        final = (SUNSET + timedelta(hours=offset)).strftime("%H:%M")
         logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
     schedule.every().day.at(final).do(execute_routine, routine=routine)
     logger.debug(f"{routine} Start: {final}; Offset: {offset}")
-    
+
+
 def schedule_onetime_routines(routine):
     start = SCHEDULES[routine["Schedule"]]["Start"]
     if "sun" in start.lower():
@@ -67,6 +71,7 @@ def schedule_onetime_routines(routine):
         schedule.every().day.at(start).do(execute_routine, routine=routine)
         logger.debug(f"{routine} Start: {start}")
 
+
 def execute_routine(routine):
     devices = routine["Devices"]
     # Group synchronous API calls together
@@ -76,11 +81,14 @@ def execute_routine(routine):
     logger.info(f"Executing {routine['Schedule']}")
     loop.run_until_complete(asyncio.gather(*calls))
 
+
 # API Calls
 async def call_api(routine, device):
     call = routine["Devices"][device]
-    type, colors, brightness, interval = [call[k] for k in ["Type", "Colors", "Brightness", "Interval"]]
-    transition = interval*1000 # ms to seconds for smooth transition
+    type, colors, brightness, interval = [
+        call[k] for k in ["Type", "Colors", "Brightness", "Interval"]
+    ]
+    transition = interval * 1000  # ms to seconds for smooth transition
     b = SmartDevice(DEVICE_IPS[device])
     await b.update()
 
@@ -93,30 +101,41 @@ async def call_api(routine, device):
     match type:
         case "on":
             await b.set_brightness(1)
-            #await b.update()
+            # await b.update()
             await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
-            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n")
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n"
+            )
         case "off":
             await b.turn_off(transition=transition)
-            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n")
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n"
+            )
         case "set_brightness":
             if b.is_off:
                 await b.set_brightness(1)
-                #await b.update()
+                # await b.update()
                 await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
-            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n")
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n"
+            )
         case "smooth_rotate":
             for c in colors:
                 hue, sat = COLOR_VALUES[c]
                 val = brightness
                 await b.set_hsv(hue, sat, val, transition=transition)
                 await asyncio.sleep(interval)
-            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n")
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n"
+            )
         case _:
-            logger.debug(f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE. \n")
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE. \n"
+            )
             pass
+
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
@@ -126,6 +145,7 @@ SUNRISE = sun.get_local_sunrise_time()
 SUNSET = sun.get_local_sunset_time()
 
 logger.debug(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
+
 
 def main():
     for r in ROUTINES:
@@ -137,14 +157,16 @@ def main():
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
                 schedule_continuous_routines(r)
-        
+
         time_until = round(schedule.idle_seconds())
-        interval = 60*5
+        interval = 60 * 5
         if counter == interval:
-            logger.info(f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}")
+            logger.info(
+                f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}"
+            )
             logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
             counter = 0
-        
+
         schedule.run_pending()
         time.sleep(1)
         counter += 1
