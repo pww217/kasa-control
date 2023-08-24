@@ -7,7 +7,7 @@ from kasa import SmartDevice, SmartBulb, SmartDimmer
 ## Logging Configuration
 # Main
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
@@ -99,7 +99,7 @@ async def call_api(routine, device):
     await b.update()
 
     match type:
-        case "on":
+        case "power_on":
             await b.set_brightness(1)
             # await b.update()
             await b.turn_on()
@@ -107,7 +107,7 @@ async def call_api(routine, device):
             logger.debug(
                 f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n"
             )
-        case "off":
+        case "power_off":
             await b.turn_off(transition=transition)
             logger.debug(
                 f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n"
@@ -152,7 +152,7 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     counter = 0
-    logger.info("Starting service...")
+    logger.info(f"Starting service at {datetime.now()}")
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
@@ -168,7 +168,7 @@ def main():
             counter = 0
 
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(0.85)
         counter += 1
 
 

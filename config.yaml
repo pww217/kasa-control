@@ -51,17 +51,17 @@ Routines:
   - Schedule: StartWorkday
     Devices:
       OfficeTop:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 50
         Interval: 5
       Office2:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 40
         Interval: 5
       Office3:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 70
         Interval: 5
@@ -69,32 +69,32 @@ Routines:
   - Schedule: BeforeSunset
     Devices:
       Kitchen:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 40
         Interval: 10
       LivingRoom:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 20
         Interval: 15
       LivingRoomAux:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 50
         Interval: 15
       OfficeTop:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 30
         Interval: 15
       Office2:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 20
         Interval: 15
       Office3:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 45
         Interval: 15
@@ -102,7 +102,7 @@ Routines:
   - Schedule: Sunset
     Devices:
       Porch:
-        Type: on
+        Type: power_on
         Colors: []
         Brightness: 100
         Interval: 15
@@ -125,7 +125,7 @@ Routines:
         Brightness: 25
         Interval: 10
       LivingRoomAux:
-        Type: off
+        Type: power_off
         Colors: []
         Brightness:
         Interval: 10
@@ -133,7 +133,7 @@ Routines:
   - Schedule: Sunrise
     Devices:
       Porch:
-        Type: off
+        Type: power_off
         Colors: []
         Brightness:
         Interval: 10
