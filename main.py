@@ -7,7 +7,7 @@ from kasa import SmartDevice, SmartBulb, SmartDimmer
 ## Logging Configuration
 # Main
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
@@ -132,7 +132,7 @@ async def call_api(routine, device):
             )
         case _:
             logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE. \n"
+                f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE.\n"
             )
             pass
 
@@ -144,8 +144,6 @@ sun = Sun(30.271041325306694, -97.74181978453979)
 SUNRISE = sun.get_local_sunrise_time()
 SUNSET = sun.get_local_sunset_time()
 
-logger.debug(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}")
-
 
 def main():
     for r in ROUTINES:
@@ -153,6 +151,7 @@ def main():
             schedule_onetime_routines(r)
     counter = 0
     logger.info(f"Starting service at {datetime.now()}")
+    logger.info(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}\n")
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
@@ -164,7 +163,7 @@ def main():
             logger.info(
                 f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}"
             )
-            logger.debug(f"\n{pformat(schedule.get_jobs())}\n")
+            logger.debug(f"{pformat(schedule.get_jobs())}\n")
             counter = 0
 
         schedule.run_pending()
