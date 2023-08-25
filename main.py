@@ -14,7 +14,7 @@ sh.setFormatter(formatter)
 logger.addHandler(sh)
 # Schedule
 schedule_logger = logging.getLogger("schedule")
-schedule_logger.setLevel(logging.DEBUG)
+schedule_logger.setLevel(logging.INFO)
 schedule_logger.addHandler(sh)
 
 
@@ -50,10 +50,8 @@ def schedule_sun_routine(start, char, routine):
         offset = -offset
     if time.lower() == "sunrise":
         final = (SUNRISE + timedelta(hours=offset)).strftime("%H:%M")
-        logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
     elif time.lower() == "sunset":
         final = (SUNSET + timedelta(hours=offset)).strftime("%H:%M")
-        logger.debug(f"Time: {time}; Operation: {char}; Offset: {offset}h")
     schedule.every().day.at(final).do(execute_routine, routine=routine)
     logger.debug(f"{routine} Start: {final}; Offset: {offset}")
 
@@ -78,9 +76,10 @@ def execute_routine(routine):
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
     loop = asyncio.get_event_loop()
-    logger.info(f"Executing {routine['Schedule']}")
     loop.run_until_complete(asyncio.gather(*calls))
-
+    logger.info(
+        f"Executing routine {routine}: Schedule: {routine['Schedule']} Devices: {routine['Devices']}"
+    )
 
 # API Calls
 async def call_api(routine, device):
@@ -149,26 +148,15 @@ def main():
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
-    counter = 0
     logger.info(f"Starting service at {datetime.now()}")
     logger.info(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}\n")
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
                 schedule_continuous_routines(r)
-
-        time_until = round(schedule.idle_seconds())
-        interval = 60 * 5
-        if counter == interval:
-            logger.info(
-                f"Next run in {timedelta(seconds=time_until)} at {schedule.next_run()}"
-            )
-            logger.debug(f"{pformat(schedule.get_jobs())}\n")
-            counter = 0
-
+        #logger.debug(f"{pformat(schedule.get_jobs())}\n")
         schedule.run_pending()
-        time.sleep(0.85)
-        counter += 1
+        time.sleep(1)
 
 
 if __name__ == "__main__":

@@ -84,17 +84,17 @@ Routines:
         Brightness: 50
         Interval: 15
       OfficeTop:
-        Type: power_on
+        Type: set_brightness
         Colors: []
         Brightness: 30
         Interval: 15
       Office2:
-        Type: power_on
+        Type: set_brightness
         Colors: []
         Brightness: 20
         Interval: 15
       Office3:
-        Type: power_on
+        Type: set_brightness
         Colors: []
         Brightness: 45
         Interval: 15
