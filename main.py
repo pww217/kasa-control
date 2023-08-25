@@ -14,7 +14,7 @@ sh.setFormatter(formatter)
 logger.addHandler(sh)
 # Schedule
 schedule_logger = logging.getLogger("schedule")
-schedule_logger.setLevel(logging.INFO)
+schedule_logger.setLevel(logging.DEBUG)
 schedule_logger.addHandler(sh)
 
 
@@ -96,19 +96,6 @@ async def call_api(routine, device):
     await b.update()
 
     match type:
-        case "power_on":
-            await b.set_brightness(1)
-            # await b.update()
-            await b.turn_on()
-            await b.set_brightness(brightness, transition=transition)
-            logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | Turn On | Brightness: {brightness}; Interval: {interval}\n"
-            )
-        case "power_off":
-            await b.turn_off(transition=transition)
-            logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n"
-            )
         case "set_brightness":
             if b.is_off:
                 await b.set_brightness(1)
@@ -117,6 +104,11 @@ async def call_api(routine, device):
             await b.set_brightness(brightness, transition=transition)
             logger.debug(
                 f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n"
+            )
+        case "power_off":
+            await b.turn_off(transition=transition)
+            logger.debug(
+                f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n"
             )
         case "smooth_rotate":
             for c in colors:

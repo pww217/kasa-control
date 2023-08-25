@@ -10,6 +10,8 @@ This works with all the initial features I intended:
 - One time jobs: power on, off, change brightness, customizable transitions
 - Continuous jobs can rotate/siren through colors until a certain time
 
+Note: `set_brightness` should also be used to turn lights on. They weren't really different enought to warrant different code.
+
 I made this originally because the TPLink app does not support a number of things I wanted to do. And to learn some stuff.
 
 Originally I thought about making it a container that runs as a continuous service, running scheduled routines and jobs.
