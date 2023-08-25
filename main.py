@@ -139,15 +139,17 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     logger.info(
-        f"Starting service at {datetime.now()}\nSunrise: {SUNRISE}; Sunset: {SUNSET}\nFirst run at {schedule.next_run()}"
+        f"Starting service at {datetime.now()}\n\
+               Sunrise: {SUNRISE}; Sunset: {SUNSET}\n\
+               First run at {schedule.next_run()}"
     )
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
-                schedule_continuous_routines(r)
+                schedule_continuous_routines(r) # Need to test this better
         #logger.debug(f"{pformat(schedule.get_jobs())}\n")
         schedule.run_pending()
-        time.sleep(5)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
