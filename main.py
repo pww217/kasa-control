@@ -147,7 +147,7 @@ def main():
                 schedule_continuous_routines(r)
         #logger.debug(f"{pformat(schedule.get_jobs())}\n")
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(5)
 
 
 if __name__ == "__main__":
