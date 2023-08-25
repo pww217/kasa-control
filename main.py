@@ -77,9 +77,7 @@ def execute_routine(routine):
     # Call an event loop and initiate API calls
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(*calls))
-    logger.info(
-        f"Executing routine {routine}: Schedule: {routine['Schedule']} Devices: {routine['Devices']}"
-    )
+    logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
 # API Calls
 async def call_api(routine, device):
@@ -148,8 +146,9 @@ def main():
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
-    logger.info(f"Starting service at {datetime.now()}")
-    logger.info(f"Sunrise: {SUNRISE}; SUNSET: {SUNSET}\n")
+    logger.info(
+        f"Starting service at {datetime.now()}\nSunrise: {SUNRISE}; Sunset: {SUNSET}\nFirst run at {schedule.next_run()}"
+    )
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
