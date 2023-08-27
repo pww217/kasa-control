@@ -35,7 +35,7 @@ Schedules:
       Start: Sunset+1
       End:
   LateNight:
-      Start: Sunrise-4
+      Start: Sunrise-5
       End:
   Sunrise:
       Start: Sunrise
@@ -54,17 +54,17 @@ Routines:
         Type: set_brightness
         Colors: []
         Brightness: 50
-        Interval: 5
+        Interval: 15
       Office2:
         Type: set_brightness
         Colors: []
         Brightness: 40
-        Interval: 5
+        Interval: 15
       Office3:
         Type: set_brightness
         Colors: []
         Brightness: 70
-        Interval: 5
+        Interval: 15
 
   - Schedule: BeforeSunset
     Devices:
@@ -72,7 +72,7 @@ Routines:
         Type: set_brightness
         Colors: []
         Brightness: 40
-        Interval: 10
+        Interval: 15
       LivingRoom:
         Type: set_brightness
         Colors: []
@@ -81,22 +81,7 @@ Routines:
       LivingRoomAux:
         Type: set_brightness
         Colors: []
-        Brightness: 50
-        Interval: 15
-      OfficeTop:
-        Type: set_brightness
-        Colors: []
-        Brightness: 30
-        Interval: 15
-      Office2:
-        Type: set_brightness
-        Colors: []
-        Brightness: 20
-        Interval: 15
-      Office3:
-        Type: set_brightness
-        Colors: []
-        Brightness: 45
+        Brightness: 75
         Interval: 15
 
   - Schedule: Sunset
@@ -115,6 +100,26 @@ Routines:
         Type: set_brightness
         Colors: []
         Brightness: 10
+        Interval: 10
+      LivingRoomAux:
+        Type: set_brightness
+        Colors: []
+        Brightness: 50
+        Interval: 10
+      OfficeTop:
+        Type: set_brightness
+        Colors: []
+        Brightness: 20
+        Interval: 10
+      Office2:
+        Type: set_brightness
+        Colors: []
+        Brightness: 10
+        Interval: 10
+      Office3:
+        Type: set_brightness
+        Colors: []
+        Brightness: 35
         Interval: 10
 
   - Schedule: LateNight
