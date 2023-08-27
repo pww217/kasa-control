@@ -133,8 +133,9 @@ sun = Sun(30.271041325306694, -97.74181978453979)
 SUNRISE = sun.get_local_sunrise_time()
 SUNSET = sun.get_local_sunset_time()
 
-
 def main():
+    if True == True:
+        import webhook
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
