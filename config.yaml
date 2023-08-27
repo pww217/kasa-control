@@ -26,7 +26,7 @@ Colors:
 # then +/- a float in hours to offset, if desired.
 Schedules:
   BeforeSunset:
-      Start: Sunset-1.5
+      Start: Sunset-2.25
       End:
   Sunset:
       Start: Sunset
