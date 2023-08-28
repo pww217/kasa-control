@@ -1,0 +1,8 @@
+FROM python:3.11.4-slim
+
+COPY webhook.py .
+
+RUN python -m pip install --upgrade pip \
+&& pip install flask==2.3.3
+
+CMD ["python", "webhook.py"]

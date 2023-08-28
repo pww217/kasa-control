@@ -2,4 +2,3 @@ pyYAML==5.3.1
 python-kasa==0.5.2
 schedule==1.2.0
 suntime==1.2.5
-flask==2.3.3
