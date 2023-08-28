@@ -79,6 +79,7 @@ def execute_routine(routine):
     loop.run_until_complete(asyncio.gather(*calls))
     logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
+
 # API Calls
 async def call_api(routine, device):
     call = routine["Devices"][device]
@@ -133,6 +134,7 @@ sun = Sun(30.271041325306694, -97.74181978453979)
 SUNRISE = sun.get_local_sunrise_time()
 SUNSET = sun.get_local_sunset_time()
 
+
 def main():
     if True == True:
         import webhook
@@ -147,8 +149,8 @@ def main():
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
-                schedule_continuous_routines(r) # Need to test this better
-        #logger.debug(f"{pformat(schedule.get_jobs())}\n")
+                schedule_continuous_routines(r)  # Need to test this better
+        # logger.debug(f"{pformat(schedule.get_jobs())}\n")
         schedule.run_pending()
         time.sleep(1)
 
