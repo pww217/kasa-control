@@ -83,6 +83,23 @@ Routines:
         Colors: []
         Brightness: 75
         Interval: 15
+   
+      OfficeTop:
+        Type: set_brightness
+        Colors: []
+        Brightness: 30
+        Interval: 10
+      Office2:
+        Type: set_brightness
+        Colors: []
+        Brightness: 25
+        Interval: 10
+      Office3:
+        Type: set_brightness
+        Colors: []
+        Brightness: 50
+        Interval: 10
+
 
   - Schedule: Sunset
     Devices:
@@ -91,6 +108,7 @@ Routines:
         Colors: []
         Brightness: 100
         Interval: 15
+  
       Kitchen:
         Type: set_brightness
         Colors: []
@@ -106,6 +124,7 @@ Routines:
         Colors: []
         Brightness: 50
         Interval: 10
+
       OfficeTop:
         Type: set_brightness
         Colors: []
@@ -130,14 +149,19 @@ Routines:
         Brightness: 25
         Interval: 10
       LivingRoomAux:
-        Type: power_off
+        Type: set_brightnes
         Colors: []
-        Brightness:
+        Brightness: 25
         Interval: 10
 
   - Schedule: Sunrise
     Devices:
       Porch:
+        Type: power_off
+        Colors: []
+        Brightness:
+        Interval: 10
+      LivingRoomAux:
         Type: power_off
         Colors: []
         Brightness:
