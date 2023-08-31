@@ -1,23 +1,43 @@
 Presents:
-  - Schedule: Movie Mode
+  Test:
+    Schedule:
     Devices:
-      Kitchen:
+      OfficeTop:
         Type: power_off
         Colors: []
         Brightness: 25
         Interval: 10
-      DiningRoom:
+      Office2:
         Type: power_off
         Colors: []
         Brightness: 25
         Interval: 10
-      LivingRoom:
+      Office3:
         Type: power_off
         Colors: []
         Brightness: 25
-        Interval: 10
-      LivingRoomAux:
-        Type: set_brightness
-        Colors: []
-        Brightness: 30
-        Interval: 10}
+        Interval: 10   
+
+# MovieMode:
+#   Schedule:
+#   Devices:
+#     Kitchen:
+#       Type: power_off
+#       Colors: []
+#       Brightness: 25
+#       Interval: 10
+#     DiningRoom:
+#       Type: power_off
+#       Colors: []
+#       Brightness: 25
+#       Interval: 10
+#     LivingRoom:
+#       Type: power_off
+#       Colors: []
+#       Brightness: 25
+#       Interval: 10
+#     LivingRoomAux:
+#       Type: set_brightness
+#       Colors: []
+#       Brightness: 30
+#       Interval: 10

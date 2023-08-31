@@ -75,7 +75,13 @@ def execute_routine(routine):
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
-    loop = asyncio.get_event_loop()
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError as ex:
+        if "There is no current event loop in thread" in str(ex):
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(*calls))
     logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
