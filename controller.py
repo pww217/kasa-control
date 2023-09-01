@@ -81,10 +81,9 @@ def execute_routine(routine):
         if "There is no current event loop in thread" in str(ex):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(*calls))
-    logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
-
+    if routine['Schedule'] != None:
+        logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
 # API Calls
 async def call_api(routine, device):
@@ -142,8 +141,6 @@ SUNSET = sun.get_local_sunset_time()
 
 
 def main():
-    if True == True:
-        import webhook
     for r in ROUTINES:
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)

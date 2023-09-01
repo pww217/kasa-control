@@ -1,8 +1,8 @@
-FROM python:3.11.4-slim
+FROM python:3.11.5-slim
 
-COPY webhook.py .
+COPY . .
 
 RUN python -m pip install --upgrade pip \
-&& pip install flask==2.3.3
+&& pip install flask==2.3.3 "Flask[async]"
 
 CMD ["python", "webhook.py"]

@@ -1,2 +1,2 @@
 make build:
-  docker build . 
+  BUILDKIT=1 docker build . 
