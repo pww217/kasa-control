@@ -1,6 +1,6 @@
 import asyncio, yaml
-from flask import Flask, request, json
-from controller import call_api, execute_routine
+from fastapi import FastAPI
+from controller import execute_routine
 
 
 def read_presents(presentFile, configFile):
@@ -16,17 +16,8 @@ def read_presents(presentFile, configFile):
 
 async def main():
     PRESENTS, DEVICE_IPS = read_presents("presents.yaml", "config.yaml")
-    app = Flask(__name__)
 
-    @app.route("/", methods=["GET", "POST"])
-    async def receive_webhook():
-        if request.method == "GET":
-            return '<h2 align="center">kasa-control webhook server</h2>'
-        elif request.method == "POST":
-            p = request.json["Present"]
-            await execute_routine(PRESENTS[p])
 
-    app.run(host="0.0.0.0", debug=True)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

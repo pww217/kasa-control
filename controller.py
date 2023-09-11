@@ -80,7 +80,6 @@ def execute_routine(routine):
     except RuntimeError as ex:
         if "There is no current event loop in thread" in str(ex):
             loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
     loop.run_until_complete(asyncio.gather(*calls))
     if routine['Schedule'] != None:
         logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
