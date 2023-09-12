@@ -8,7 +8,7 @@ Presents:
         Brightness: 25
         Interval: 10
       Office2:
-        Type: set_brightness
+        Type: turn_off
         Colors: []
         Brightness: 25
         Interval: 10

@@ -1,5 +1,6 @@
 import asyncio, yaml
 from fastapi import FastAPI
+from pydantic import BaseModel
 from controller import execute_routine
 
 
@@ -13,11 +14,19 @@ def read_presents(presentFile, configFile):
         ips = output.get("Devices")
     return presents, ips
 
+PRESENTS, DEVICE_IPS = read_presents("presents.yaml", "config.yaml")
 
-async def main():
-    PRESENTS, DEVICE_IPS = read_presents("presents.yaml", "config.yaml")
+class Present(BaseModel):
+    present: str
 
+app = FastAPI()
 
+@app.post("/")
+async def receive_webhook(present: Present):
+    return present
+    #await execute_routine([PRESENTS[present]])
+    #return "200"
 
-if __name__ == "__main__":
-    main()
+@app.get("/")
+async def root():
+    return PRESENTS["Test"]
