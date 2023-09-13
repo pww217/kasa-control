@@ -29,8 +29,6 @@ class Present(BaseModel):
 
 app = FastAPI()
 
-logger.warning(__file__, __name__)
-
 @app.post("/")
 async def receive_webhook(present: Present):
     present = PRESENTS[dict(present)["present"]]
