@@ -8,7 +8,7 @@ Presents:
         Brightness: 25
         Interval: 10
       Office2:
-        Type: power_off
+        Type: set_brightness
         Colors: []
         Brightness: 25
         Interval: 10
@@ -16,11 +16,6 @@ Presents:
         Type: set_brightness
         Colors: []
         Brightness: 25
-        Interval: 10
-      DiningRoom:
-        Type: power_off
-        Colors: []
-        Brightness: 100
         Interval: 10
 
 # MovieMode:
