@@ -1,8 +1,16 @@
-import asyncio, yaml
+import asyncio, yaml, logging
 from fastapi import FastAPI
 from pydantic import BaseModel
 from controller import execute_routine
 
+## Logging Configuration
+# Main
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
+sh = logging.StreamHandler()
+sh.setFormatter(formatter)
+logger.addHandler(sh)
 
 def read_presents(presentFile, configFile):
     # New keys can be added here
@@ -21,11 +29,14 @@ class Present(BaseModel):
 
 app = FastAPI()
 
+logger.warning(__file__, __name__)
+
 @app.post("/")
 async def receive_webhook(present: Present):
-    return present
-    #await execute_routine([PRESENTS[present]])
-    #return "200"
+    present = PRESENTS[dict(present)["present"]]
+    #return present
+    execute_routine(present, "webhook")
+    return 200
 
 @app.get("/")
 async def root():
