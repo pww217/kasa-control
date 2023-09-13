@@ -1,5 +1,5 @@
 Presents:
-  Test:
+  OfficeOn:
     Schedule:
     Devices:
       OfficeTop:
@@ -10,34 +10,51 @@ Presents:
       Office2:
         Type: set_brightness
         Colors: []
-        Brightness: 25
+        Brightness: 15
         Interval: 10
       Office3:
         Type: set_brightness
         Colors: []
+        Brightness: 35
+        Interval: 10
+  OfficeOff:
+    Schedule:
+    Devices:
+      OfficeTop:
+        Type: power_off
+        Colors: []
         Brightness: 25
         Interval: 10
-
-# MovieMode:
-#   Schedule:
-#   Devices:
-#     Kitchen:
-#       Type: power_off
-#       Colors: []
-#       Brightness: 25
-#       Interval: 10
-#     DiningRoom:
-#       Type: power_off
-#       Colors: []
-#       Brightness: 25
-#       Interval: 10
-#     LivingRoom:
-#       Type: power_off
-#       Colors: []
-#       Brightness: 25
-#       Interval: 10
-#     LivingRoomAux:
-#       Type: set_brightness
-#       Colors: []
-#       Brightness: 30
-#       Interval: 10
+      Office2:
+        Type: power_off
+        Colors: []
+        Brightness: 15
+        Interval: 10
+      Office3:
+        Type: power_off
+        Colors: []
+        Brightness: 35
+        Interval: 10
+MovieMode:
+  Schedule:
+  Devices:
+    Kitchen:
+      Type: power_off
+      Colors: []
+      Brightness: 25
+      Interval: 10
+    DiningRoom:
+      Type: power_off
+      Colors: []
+      Brightness: 25
+      Interval: 10
+    LivingRoom:
+      Type: power_off
+      Colors: []
+      Brightness: 25
+      Interval: 10
+    LivingRoomAux:
+      Type: set_brightness
+      Colors: []
+      Brightness: 25
+      Interval: 10
