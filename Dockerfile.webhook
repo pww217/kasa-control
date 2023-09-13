@@ -1,8 +1,10 @@
 FROM python:3.11.5-slim
 
+EXPOSE 8000
+
 COPY . .
 
 RUN python -m pip install --upgrade pip \
 && pip install -r requirements.txt
 
-CMD ["python", "webhook.py"]
+CMD ["uvicorn", "webhook:app", "--host", "0.0.0.0"]
