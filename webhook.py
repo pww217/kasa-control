@@ -1,4 +1,4 @@
-import asyncio, yaml, logging
+import yaml, logging
 from fastapi import FastAPI
 from pydantic import BaseModel
 from controller import execute_routine

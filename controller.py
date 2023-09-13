@@ -1,4 +1,5 @@
 import yaml, asyncio, logging, schedule, time
+from asyncio import get_event_loop, gather, sleep
 from pprint import pformat
 from datetime import datetime, timedelta
 from suntime import Sun, SunTimeException
@@ -76,11 +77,11 @@ def execute_routine(routine, module="controller"):
     # Call an event loop and initiate API calls
     logger.info(module)
     if module == "webhook":
-        asyncio.gather(*calls)
+        gather(*calls)
     elif module == "controller":
         logger.info("Execute routine")
-        loop = asyncio.get_event_loop() # Main usage
-        loop.run_until_complete(asyncio.gather(*calls))
+        loop = get_event_loop() # Main usage
+        loop.run_until_complete(gather(*calls))
     logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
 # API Calls
@@ -119,7 +120,7 @@ async def call_api(routine, device):
                 hue, sat = COLOR_VALUES[c]
                 val = brightness
                 await b.set_hsv(hue, sat, val, transition=transition)
-                await asyncio.sleep(interval)
+                await sleep(interval)
             logger.debug(
                 f"POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}"
             )
