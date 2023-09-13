@@ -7,7 +7,7 @@ from kasa import SmartDevice, SmartBulb, SmartDimmer
 ## Logging Configuration
 # Main
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
 sh = logging.StreamHandler()
 sh.setFormatter(formatter)
@@ -16,7 +16,6 @@ logger.addHandler(sh)
 schedule_logger = logging.getLogger("schedule")
 schedule_logger.setLevel(logging.INFO)
 schedule_logger.addHandler(sh)
-
 
 # Config
 def read_config(filename):
@@ -70,13 +69,18 @@ def schedule_onetime_routines(routine):
         logger.debug(f"{routine} Start: {start}")
 
 
-def execute_routine(routine):
+def execute_routine(routine, module="controller"):
     devices = routine["Devices"]
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.gather(*calls))
+    logger.info(module)
+    if module == "webhook":
+        asyncio.gather(*calls)
+    elif module == "controller":
+        logger.info("Execute routine")
+        loop = asyncio.get_event_loop() # Main usage
+        loop.run_until_complete(asyncio.gather(*calls))
     logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
 
 # API Calls
@@ -103,12 +107,12 @@ async def call_api(routine, device):
                 await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
             logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}\n"
+                f"POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}"
             )
         case "power_off":
             await b.turn_off(transition=transition)
             logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}\n"
+                f"POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}"
             )
         case "smooth_rotate":
             for c in colors:
@@ -117,11 +121,11 @@ async def call_api(routine, device):
                 await b.set_hsv(hue, sat, val, transition=transition)
                 await asyncio.sleep(interval)
             logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}\n"
+                f"POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}"
             )
         case _:
             logger.debug(
-                f" POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE.\n"
+                f"POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE."
             )
             pass
 
@@ -139,15 +143,15 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     logger.info(
-        f"Starting service at {datetime.now()}\n\
-               Sunrise: {SUNRISE}; Sunset: {SUNSET}\n\
+        f"Starting service at {datetime.now()}\
+               Sunrise: {SUNRISE}; Sunset: {SUNSET}\
                First run at {schedule.next_run()}"
     )
     while True:
         for r in ROUTINES:
             if SCHEDULES[r["Schedule"]]["End"] != None:
-                schedule_continuous_routines(r) # Need to test this better
-        #logger.debug(f"{pformat(schedule.get_jobs())}\n")
+                schedule_continuous_routines(r)  # Need to test this better
+        # logger.debug(f"{pformat(schedule.get_jobs())}\n")
         schedule.run_pending()
         time.sleep(1)
 
