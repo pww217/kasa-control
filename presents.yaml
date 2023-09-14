@@ -6,17 +6,18 @@ Presents:
         Type: set_brightness
         Colors: []
         Brightness: 25
-        Interval: 10
+        Interval: 5
       Office2:
         Type: set_brightness
         Colors: []
         Brightness: 15
-        Interval: 10
+        Interval: 5
       Office3:
         Type: set_brightness
         Colors: []
         Brightness: 35
-        Interval: 10
+        Interval: 5
+
   OfficeOff:
     Schedule:
     Devices:
@@ -24,17 +25,37 @@ Presents:
         Type: power_off
         Colors: []
         Brightness: 25
-        Interval: 10
+        Interval: 5
       Office2:
         Type: power_off
         Colors: []
         Brightness: 15
-        Interval: 10
+        Interval: 5
       Office3:
         Type: power_off
         Colors: []
         Brightness: 35
+        Interval: 5
+
+  ImHome:
+    Schedule:
+    Devices:
+      Kitchen:
+        Type: set_brightness
+        Colors: []
+        Brightness: 20
         Interval: 10
+      LivingRoom:
+        Type: set_brightness
+        Colors: []
+        Brightness: 10
+        Interval: 10
+      LivingRoomAux:
+        Type: set_brightness
+        Colors: []
+        Brightness: 40
+        Interval: 10
+
   MovieMode:
     Schedule:
     Devices:
@@ -58,3 +79,12 @@ Presents:
         Colors: []
         Brightness: 25
         Interval: 10
+
+PorchOn:
+    Schedule:
+    Devices:
+      Porch:
+        Type: set_brightness
+        Colors: []
+        Brightness: 100
+        Interval: 7
