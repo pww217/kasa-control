@@ -16,7 +16,7 @@ def read_presents(presentFile, configFile):
     # New keys can be added here
     with open(presentFile) as f:
         output = yaml.safe_load(f)
-        presents = output.get("Presents")
+        presents = output
     with open(configFile) as f:
         output = yaml.safe_load(f)
         ips = output.get("Devices")
@@ -31,11 +31,11 @@ app = FastAPI()
 
 @app.post("/")
 async def receive_webhook(present: Present):
-    present = PRESENTS[dict(present)["present"]]
+    present = PRESENTS[dict(present)]
     #return present
     execute_routine(present, "webhook")
     return 200
 
 @app.get("/")
 async def root():
-    return PRESENTS["Test"]
+    return PRESENTS
