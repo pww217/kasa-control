@@ -1,16 +1,8 @@
-import yaml, logging
+import yaml
 from fastapi import FastAPI
 from pydantic import BaseModel
 from controller import execute_routine
-
-## Logging Configuration
-# Main
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
-sh = logging.StreamHandler()
-sh.setFormatter(formatter)
-logger.addHandler(sh)
+from logger import configure_logger
 
 def read_presents(presentFile, configFile):
     # New keys can be added here
@@ -21,6 +13,9 @@ def read_presents(presentFile, configFile):
         output = yaml.safe_load(f)
         ips = output.get("Devices")
     return presents, ips
+
+configure_logger(__name__, 'debug')
+configure_logger('controller', 'debug')
 
 PRESENTS, DEVICE_IPS = read_presents("presents.yaml", "config.yaml")
 
@@ -39,3 +34,6 @@ async def receive_webhook(present: Present):
 @app.get("/")
 async def root():
     return PRESENTS
+
+#@app.get("/p/")
+#async def parse_query():

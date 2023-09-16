@@ -1,22 +1,9 @@
-import yaml, asyncio, logging, schedule, time
+import yaml, schedule, time
 from asyncio import get_event_loop, gather, sleep
-from pprint import pformat
 from datetime import datetime, timedelta
-from suntime import Sun, SunTimeException
+from suntime import Sun
 from kasa import SmartDevice, SmartBulb, SmartDimmer
-
-## Logging Configuration
-# Main
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
-sh = logging.StreamHandler()
-sh.setFormatter(formatter)
-logger.addHandler(sh)
-# Schedule
-schedule_logger = logging.getLogger("schedule")
-schedule_logger.setLevel(logging.INFO)
-schedule_logger.addHandler(sh)
+from logger import configure_logger
 
 # Config
 def read_config(filename):
@@ -130,6 +117,8 @@ async def call_api(routine, device):
             )
             pass
 
+logger = configure_logger(__name__, 'info')
+schedule_logger = configure_logger('schedule', 'info')
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
@@ -144,8 +133,8 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     logger.info(
-        f"Starting service at {datetime.now()}\
-               Sunrise: {SUNRISE}; Sunset: {SUNSET}\
+        f"Starting service at {datetime.now()}\n\
+               Sunrise: {SUNRISE}; Sunset: {SUNSET}\n\
                First run at {schedule.next_run()}"
     )
     while True:
