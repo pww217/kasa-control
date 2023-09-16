@@ -1,21 +1,22 @@
-import logging
+from logging import getLogger, Formatter, StreamHandler
 
+# Subs for logging.LEVEL values
 LOG_LEVELS = { 
-  'debug': logging.DEBUG,
-  'info': logging.INFO,
-  'warning': logging.WARNING,
-  'error': logging.ERROR,
-  'critical': logging.CRITICAL
+  'debug': 10,
+  'info': 20,
+  'warning': 30,
+  'error': 40,
+  'critical': 50
 }
 
 def configure_logger(module, level):
   ## Logging Configuration
   # Main
   level = LOG_LEVELS[level]
-  logger = logging.getLogger(module)
+  logger = getLogger(module)
   logger.setLevel(level)
-  formatter = logging.Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
-  sh = logging.StreamHandler()
+  formatter = Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
+  sh = StreamHandler()
   sh.setFormatter(formatter)
   logger.addHandler(sh)
   return logger
