@@ -1,5 +1,6 @@
 import yaml
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from controller import execute_routine
 from logger import configure_logger
@@ -14,6 +15,11 @@ def read_presents(presentFile, configFile):
         ips = output.get("Devices")
     return presents, ips
 
+async def receive_call(present):
+    present = PRESENTS[present]
+    execute_routine(present, "webhook")
+    return 200
+
 configure_logger(__name__, 'debug')
 configure_logger('controller', 'debug')
 
@@ -25,15 +31,16 @@ class Present(BaseModel):
 app = FastAPI()
 
 @app.post("/")
-async def receive_webhook(present: Present):
-    present = PRESENTS[dict(present)]
-    #return present
-    execute_routine(present, "webhook")
-    return 200
+async def root(present: Present = str):
+    return await receive_call(dict(present)["present"])
 
 @app.get("/")
 async def root():
     return PRESENTS
 
-#@app.get("/p/")
-#async def parse_query():
+@app.get("/p/")
+async def parse_query(present: str):
+    #try:
+    return await receive_call(present)
+    #except:
+    #    return 'failure'

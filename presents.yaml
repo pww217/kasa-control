@@ -76,7 +76,7 @@ MovieMode:
     LivingRoomAux:
       Type: set_brightness
       Colors: []
-      Brightness: 25
+      Brightness: 60
       Interval: 10
 
 PorchOn:
