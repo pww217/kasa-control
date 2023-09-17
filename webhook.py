@@ -27,7 +27,6 @@ class Present(BaseModel):
 app = FastAPI(
     title="Kasa-Control Webhook Server",
     description="A control server and repository of configuration information",
-    summary="See docs",
     version="1.2.0",
 )
 
