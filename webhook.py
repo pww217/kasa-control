@@ -1,32 +1,24 @@
-import yaml
+import logging
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from controller import execute_routine
+
 from logger import configure_logger
+from globals import get_device_ips, read_presents
 
+from api import execute_routine
 
-def read_presents(presentFile, configFile):
-    # New keys can be added here
-    with open(presentFile) as f:
-        output = yaml.safe_load(f)
-        presents = output
-    with open(configFile) as f:
-        output = yaml.safe_load(f)
-        ips = output.get("Devices")
-    return presents, ips
+logger = configure_logger(__name__, logging.DEBUG)
 
 
 async def receive_call(present):
     present = PRESENTS[present]
-    execute_routine(present, "webhook")
+    await execute_routine(present, "webhook")
     return 200
 
 
-configure_logger(__name__, "debug")
-configure_logger("controller", "debug")
-
-PRESENTS, DEVICE_IPS = read_presents("presents.yaml", "config.yaml")
+DEVICE_IPS = get_device_ips()
+PRESENTS = read_presents()
 
 
 class Present(BaseModel):
