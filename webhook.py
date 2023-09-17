@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from logger import configure_logger
 from globals import read_config, read_presents
-
 from api import execute_routine
 
 logger = configure_logger(__name__, logging.DEBUG)
@@ -34,29 +33,18 @@ app = FastAPI(
 
 
 @app.post("/")
-async def root(present: Present = str):
+async def root(present: Present):
     return await receive_call(dict(present)["present"])
 
 
 @app.get("/")
+async def redirect():
+    return RedirectResponse("/docs/")
+
+
 @app.get("/p/")
 async def parse_query(present: str):
     return await receive_call(present)
-
-
-@app.get("/presents/")
-async def root():
-    return PRESENTS
-
-
-@app.get("/devices/")
-async def root():
-    return DEVICE_IPS
-
-
-@app.get("/schedules/")
-async def root():
-    return SCHEDULES
 
 
 @app.get("/colors/")
@@ -64,6 +52,21 @@ async def root():
     return COLOR_VALUES
 
 
+@app.get("/devices/")
+async def root():
+    return DEVICE_IPS
+
+
+@app.get("/presents/")
+async def root():
+    return PRESENTS
+
+
 @app.get("/routines/")
 async def root():
     return ROUTINES
+
+
+@app.get("/schedules/")
+async def root():
+    return SCHEDULES

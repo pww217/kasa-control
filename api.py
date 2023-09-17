@@ -1,6 +1,12 @@
+import logging
 from asyncio import get_event_loop, gather, sleep
 from kasa import SmartDevice, SmartBulb, SmartDimmer
+from logger import configure_logger
+from globals import read_config
 
+DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
+
+logger = configure_logger(__name__, logging.DEBUG)
 
 async def execute_routine(routine, module):
     devices = routine["Devices"]
