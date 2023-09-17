@@ -5,6 +5,7 @@ from suntime import Sun
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 from logger import configure_logger
 
+
 # Config
 def read_config(filename):
     # New keys can be added here
@@ -62,14 +63,14 @@ def execute_routine(routine, module="controller"):
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]
     # Call an event loop and initiate API calls
-    logger.info(module)
     if module == "webhook":
         gather(*calls)
     elif module == "controller":
         logger.info("Execute routine")
-        loop = get_event_loop() # Main usage
+        loop = get_event_loop()  # Main usage
         loop.run_until_complete(gather(*calls))
     logger.info(f"Executing Routine - Schedule: {routine['Schedule']}")
+
 
 # API Calls
 async def call_api(routine, device):
@@ -117,8 +118,9 @@ async def call_api(routine, device):
             )
             pass
 
-logger = configure_logger(__name__, 'info')
-schedule_logger = configure_logger('schedule', 'info')
+
+logger = configure_logger(__name__, "info")
+schedule_logger = configure_logger("schedule", "info")
 
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config("config.yaml")
