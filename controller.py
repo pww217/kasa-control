@@ -4,9 +4,7 @@ from suntime import Sun
 
 from api import execute_routine
 from logger import configure_logger
-from globals import get_device_ips, read_config
-
-logger = configure_logger(__name__, logging.DEBUG)
+from globals import read_config
 
 
 # Scheduling
@@ -51,9 +49,10 @@ def schedule_onetime_routines(routine):
         logger.debug(f"{routine} Start: {start}")
 
 
+logger = configure_logger(__name__, logging.DEBUG)
+
 # Globals from config
-DEVICE_IPS = get_device_ips()
-COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
+DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
 
 sun = Sun(30.271041325306694, -97.74181978453979)
 
