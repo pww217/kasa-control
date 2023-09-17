@@ -1,6 +1,6 @@
 FROM python:3.11.5-slim
 
-COPY config.yaml controller.py requirements.txt /app/
+COPY config.yaml controller.py logger.py requirements.txt /app/
 
 WORKDIR /app
 

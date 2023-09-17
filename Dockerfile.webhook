@@ -2,7 +2,7 @@ FROM python:3.11.5-slim
 
 EXPOSE 8008
 
-COPY config.yaml controller.py presents.yaml requirements.txt webhook.py /app/
+COPY config.yaml controller.py presents.yaml logger.py requirements.txt webhook.py /app/
 
 WORKDIR /app
 
