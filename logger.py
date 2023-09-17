@@ -6,8 +6,8 @@ def configure_logger(module, level):
     # Main
     logger = getLogger(module)
     logger.setLevel(level)
-    # formatter = Formatter("%(asctime)s-%(levelname)s: %(message)s", "%H:%M:%S")
+    formatter = Formatter("%(levelname)s:     %(message)s")
     sh = StreamHandler()
-    # sh.setFormatter(formatter)
+    sh.setFormatter(formatter)
     logger.addHandler(sh)
     return logger

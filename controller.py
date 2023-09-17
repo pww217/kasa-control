@@ -6,6 +6,8 @@ from api import execute_routine
 from logger import configure_logger
 from globals import read_config
 
+logger = configure_logger(__name__, logging.INFO)
+
 
 # Scheduling
 def schedule_continuous_routines(routine):
@@ -49,8 +51,6 @@ def schedule_onetime_routines(routine):
         logger.debug(f"{routine} Start: {start}")
 
 
-logger = configure_logger(__name__, logging.DEBUG)
-
 # Globals from config
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
 
@@ -65,9 +65,9 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     logger.info(
-        f"Starting service at {datetime.now()}\n\
-               Sunrise: {SUNRISE}; Sunset: {SUNSET}\n\
-               First run at {schedule.next_run()}"
+        f"Starting service on {datetime.now().strftime('%A - %H:%M')}\n\
+          Sunrise: {SUNRISE.strftime('%H:%M')}; Sunset: {SUNSET.strftime('%H:%M')}\n\
+          First run at {schedule.next_run().strftime('%H:%M')}"
     )
     while True:
         for r in ROUTINES:
