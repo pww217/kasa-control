@@ -65,9 +65,9 @@ def main():
         if SCHEDULES[r["Schedule"]]["End"] == None:
             schedule_onetime_routines(r)
     logger.info(
-        f"Starting service on {datetime.now().strftime('%A - %H:%M')}\n\
+        f"Starting service on {datetime.now().strftime('%c')}\n\
           Sunrise: {SUNRISE.strftime('%H:%M')}; Sunset: {SUNSET.strftime('%H:%M')}\n\
-          First run at {schedule.next_run().strftime('%H:%M')}"
+          First run on {schedule.next_run().strftime('%A at %H:%M')}"
     )
     while True:
         for r in ROUTINES:
