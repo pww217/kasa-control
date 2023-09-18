@@ -29,9 +29,9 @@ async def execute_routine(routine, module):
 # API Calls
 async def call_api(routine, device):
     call = routine["Devices"][device]
-    type, colors, brightness, interval = [
+    type, colors, brightness, interval = (
         call[k] for k in ["Type", "Colors", "Brightness", "Interval"]
-    ]
+    )
     transition = interval * 1000  # ms to seconds for smooth transition
     b = SmartDevice(DEVICE_IPS[device])
     await b.update()

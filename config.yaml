@@ -22,7 +22,7 @@ Colors:
 
 # One-time routines should have start times only
 # Continuous routines should have an end
-# For Sunrise schedules, you can use Sunrise or Sunset and 
+# For Sunrise schedules, you can use Sunrise or Sunset and
 # then +/- a float in hours to offset, if desired.
 Schedules:
   BeforeSunset:
@@ -83,7 +83,7 @@ Routines:
         Colors: []
         Brightness: 75
         Interval: 15
-   
+
       OfficeTop:
         Type: set_brightness
         Colors: []
@@ -108,7 +108,7 @@ Routines:
         Colors: []
         Brightness: 100
         Interval: 15
-  
+
       Kitchen:
         Type: set_brightness
         Colors: []
@@ -176,14 +176,14 @@ Routines:
 #        Type: smooth_rotate
 #        Colors: [Violet, Red, Blue, Orange]
 #        Brightness: 80
-#        Interval: 1 
+#        Interval: 1
 #      Office2:
 #        Type: smooth_rotate
 #        Colors: [Orange, Violet, Red, Blue]
 #        Brightness: 80
-#        Interval: 1 
+#        Interval: 1
 #      Office3:
 #        Type: smooth_rotate
 #        Colors: [Blue, Orange, Violet, Red]
 #        Brightness: 80
-#        Interval: 1 
+#        Interval: 1
