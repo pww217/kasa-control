@@ -78,7 +78,7 @@ GoingOut:
       Type: set_brightness
       Colors: []
       Brightness: 100
-      Interval: 7  
+      Interval: 7
 
 MovieMode:
   Schedule:
@@ -96,7 +96,7 @@ MovieMode:
     LivingRoom:
       Type: power_off
       Colors: []
-      Brightness: 
+      Brightness:
       Interval: 10
     LivingRoomAux:
       Type: set_brightness
