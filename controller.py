@@ -47,7 +47,7 @@ def schedule_onetime_routines(routine):
         else:
             schedule_sun_routine(start, None, routine)
     else:
-        schedule.every(3).seconds.do(execute_routine, routine=routine)
+        schedule.every().day.at(start).do(execute_routine, routine=routine)
         logger.debug(f"{routine} Start: {start}")
 
 
