@@ -7,7 +7,7 @@ run :
 	python uvicorn_serve.py
 
 build :
-	docker build . 
+	docker build .
 
 build-web:
 	docker build -f Dockerfile.webhook .

@@ -10,7 +10,7 @@ def read_config(config_file=config_file):
     keys = ["Devices", "Colors", "Routines", "Schedules"]
     with open(config_file) as f:
         output = yaml.safe_load(f)
-    DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = [output.get(k) for k in keys]
+    DEVICE_IPS, COLOR_VALUES, ROUTINES, SCHEDULES = (output.get(k) for k in keys)
     return DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES
 
 
