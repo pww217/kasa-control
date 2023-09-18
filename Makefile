@@ -4,7 +4,7 @@ dev :
 	uvicorn webhook:app --host localhost --port 8008 --reload
 
 run :
-	python uvicorn_serve.py
+	python server.py
 
 build :
 	docker build .

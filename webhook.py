@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
-from logger import configure_logger
 from globals import read_config, read_presents
 from api import execute_routine
 
