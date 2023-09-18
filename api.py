@@ -8,7 +8,7 @@ from globals import read_config
 
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
 
-logger = configure_logger(__name__, logging.DEBUG)
+logger = configure_logger(__name__, logging.INFO)
 
 
 def execute_routine(routine, module="controller"):
@@ -20,7 +20,7 @@ def execute_routine(routine, module="controller"):
         gather(*calls)
     elif module == "controller":
         logger.info(
-            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%a - %H:%M')}"
+            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M%S')}"
         )
         loop = get_event_loop()  # Main usage
         loop.run_until_complete(gather(*calls))
@@ -48,25 +48,25 @@ async def call_api(routine, device):
                 await b.set_brightness(1)
                 await b.turn_on()
             await b.set_brightness(brightness, transition=transition)
-            logger.debug(
+            logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}"
             )
         case "power_off":
             await b.turn_off(transition=transition)
-            logger.debug(
+            logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}"
             )
         case "toggle_power":
             if b.is_on:
                 await b.turn_off(transition=transition)
-                logger.debug(
+                logger.info(
                     f"POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}"
                 )
             else:
                 await b.set_brightness(1)
                 await b.turn_on()
                 await b.set_brightness(brightness, transition=transition)
-                logger.debug(
+                logger.info(
                     f"POST {device}@{DEVICE_IPS[device]} | Turn On | Interval: {interval}"
                 )
         case "smooth_rotate":
@@ -75,11 +75,11 @@ async def call_api(routine, device):
                 val = brightness
                 await b.set_hsv(hue, sat, val, transition=transition)
                 await sleep(interval)
-            logger.debug(
+            logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Rotate | Color: {c}; Brightness: {brightness}; Interval: {interval}"
             )
         case _:
-            logger.debug(
+            logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | THIS DEVICE DID NOT MATCH A VALID TYPE."
             )
             pass
