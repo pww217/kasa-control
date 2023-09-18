@@ -7,13 +7,13 @@ from logger import configure_logger
 from globals import read_config, read_presents
 from api import execute_routine
 
-logger = configure_logger(__name__, logging.DEBUG)
-
 
 async def receive_call(present):
     present = PRESENTS[present]
-    execute_routine(present, "webhook")
-    return 200
+    try:
+        return execute_routine(present, "webhook")
+    except KeyError:
+        return "That present does not exist. Check /presents/ for options."
 
 
 DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
@@ -27,16 +27,8 @@ class Present(BaseModel):
 app = FastAPI(
     title="Kasa-Control Webhook Server",
     description="A control server and repository of configuration information",
-    version="1.2.0",
+    version="1.2.1",
 )
-
-
-@app.post("/")
-async def root(present: Present):
-    try:
-        return await receive_call(dict(present)["present"])
-    except KeyError:
-        return "That present does not exist. Check /presents/ for options."
 
 
 @app.get("/")
@@ -44,12 +36,14 @@ async def redirect():
     return RedirectResponse("/docs/")
 
 
+@app.post("/")
+async def root(present: Present):
+    return await receive_call(dict(present)["present"])
+
+
 @app.get("/p/")
 async def parse_query(present: str):
-    try:
-        return await receive_call(present)
-    except KeyError:
-        return "That present does not exist. Check /presents/ for options."
+    return await receive_call(present)
 
 
 @app.get("/colors/")

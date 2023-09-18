@@ -18,6 +18,7 @@ def execute_routine(routine, module="controller"):
     # Call an event loop and initiate API calls
     if module == "webhook":
         gather(*calls)
+        return 200
     elif module == "controller":
         logger.info(
             f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M%S')}"
