@@ -11,7 +11,7 @@ DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
 logger = configure_logger(__name__, logging.DEBUG)
 
 
-async def execute_routine(routine, module):
+def execute_routine(routine, module="controller"):
     devices = routine["Devices"]
     # Group synchronous API calls together
     calls = [call_api(routine, d) for d in devices]

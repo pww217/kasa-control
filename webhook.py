@@ -12,7 +12,7 @@ logger = configure_logger(__name__, logging.DEBUG)
 
 async def receive_call(present):
     present = PRESENTS[present]
-    await execute_routine(present, "webhook")
+    execute_routine(present, "webhook")
     return 200
 
 
@@ -33,7 +33,10 @@ app = FastAPI(
 
 @app.post("/")
 async def root(present: Present):
-    return await receive_call(dict(present)["present"])
+    try:
+        return await receive_call(dict(present)["present"])
+    except KeyError:
+        return "That present does not exist. Check /presents/ for options."
 
 
 @app.get("/")
@@ -43,7 +46,10 @@ async def redirect():
 
 @app.get("/p/")
 async def parse_query(present: str):
-    return await receive_call(present)
+    try:
+        return await receive_call(present)
+    except KeyError:
+        return "That present does not exist. Check /presents/ for options."
 
 
 @app.get("/colors/")
