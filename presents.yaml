@@ -52,7 +52,7 @@ MovieMode:
     LivingRoom:
       Type: power_off
       Colors: []
-      Brightness: 
+      Brightness:
       Interval: 10
     LivingRoomAux:
       Type: set_brightness
