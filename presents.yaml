@@ -131,3 +131,27 @@ Bright:
       Colors: []
       Brightness: 75
       Interval: 10
+
+Cleaning:
+  Schedule:
+  Devices:
+    Kitchen:
+      Type: set_brightness
+      Colors: []
+      Brightness: 70
+      Interval: 10
+    LivingRoom:
+      Type: set_brightness
+      Colors: []
+      Brightness: 60
+      Interval: 10
+    LivingRoomAux:
+      Type: set_brightness
+      Colors: []
+      Brightness: 100
+      Interval: 10
+    DiningRoom:
+      Type: set_brightness
+      Colors: []
+      Brightness: 70
+      Interval: 10
