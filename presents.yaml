@@ -35,6 +35,11 @@ ImHome:
       Colors: []
       Brightness: 40
       Interval: 10
+    DiningRoom:
+      Type: power_off
+      Colors: []
+      Brightness: 20
+      Interval: 10
 
 GoingOut:
   Schedule:
