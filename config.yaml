@@ -117,7 +117,7 @@ Routines:
       LivingRoom:
         Type: set_brightness
         Colors: []
-        Brightness: 10
+        Brightness: 5
         Interval: 10
       LivingRoomAux:
         Type: set_brightness
