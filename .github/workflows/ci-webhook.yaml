@@ -2,7 +2,17 @@ name: "[CI] Webhook"
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - api.py
+      - Dockerfile.webhook
+      - globals.py
+      - logger.py
+      - presents.yaml
+      - server.py
+      - webhook.py
+
   workflow_dispatch:
 
 jobs:

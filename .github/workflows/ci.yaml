@@ -2,7 +2,15 @@ name: "[CI] Controller"
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - api.py
+      - config.yaml
+      - controller.py
+      - Dockerfile
+      - globals.py
+      - logger.py
 
   workflow_dispatch:
 
