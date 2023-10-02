@@ -2,17 +2,17 @@ ToggleOffice:
   Schedule:
   Devices:
     OfficeTop:
-      Type: set_brightness
+      Type: toggle_power
       Colors: []
       Brightness: 50
       Interval: 7
     Office2:
-      Type: set_brightness
+      Type: toggle_power
       Colors: []
       Brightness: 40
       Interval: 7
     Office3:
-      Type: set_brightness
+      Type: toggle_power
       Colors: []
       Brightness: 70
       Interval: 7
