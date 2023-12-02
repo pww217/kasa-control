@@ -179,3 +179,37 @@ Cleaning:
       Colors: []
       Brightness: 70
       Interval: 10
+
+Bedtime:
+  Schedule:
+  Devices:
+    Kitchen:
+      Type: power_off
+      Colors: []
+      Brightness: 40
+      Interval: 10
+    DiningRoom:
+      Type: power_off
+      Colors: []
+      Brightness: 40
+      Interval: 10
+    LivingRoom:
+      Type: power_off
+      Colors: []
+      Brightness: 20
+      Interval: 10
+    OfficeTop:
+      Type: power_off
+      Colors: []
+      Brightness: 25
+      Interval: 7
+    Office2:
+      Type: power_off
+      Colors: []
+      Brightness: 15
+      Interval: 7
+    Office3:
+      Type: power_off
+      Colors: []
+      Brightness: 35
+      Interval: 7

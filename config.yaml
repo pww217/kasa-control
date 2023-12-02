@@ -64,7 +64,7 @@ Routines:
       LivingRoomAux:
         Type: set_brightness
         Colors: []
-        Brightness: 75
+        Brightness: 100
         Interval: 15
 
   - Schedule: Sunset
