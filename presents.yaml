@@ -187,17 +187,17 @@ Bedtime:
       Type: power_off
       Colors: []
       Brightness: 40
-      Interval: 10
+      Interval: 7
     DiningRoom:
       Type: power_off
       Colors: []
       Brightness: 40
-      Interval: 10
+      Interval: 7
     LivingRoom:
       Type: power_off
       Colors: []
       Brightness: 20
-      Interval: 10
+      Interval: 7
     OfficeTop:
       Type: power_off
       Colors: []
