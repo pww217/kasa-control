@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
-from asyncio import get_event_loop, gather, sleep
+from multiprocessing import Process
+from asyncio import sleep, new_event_loop, set_event_loop
 from kasa import SmartDevice, SmartBulb, SmartDimmer
 
 from logger import configure_logger
@@ -11,20 +12,31 @@ DEVICE_IPS, COLOR_VALUES, SCHEDULES, ROUTINES = read_config()
 logger = configure_logger(__name__, logging.INFO)
 
 
+# Wraps the call_api function with asyncio
+def call_api_async(routine, device):
+    loop = new_event_loop()
+    set_event_loop(loop)
+    loop.run_until_complete(call_api(routine, device))
+
+
 def execute_routine(routine, module="controller"):
     devices = routine["Devices"]
-    # Group synchronous API calls together
-    calls = [call_api(routine, d) for d in devices]
-    # Call an event loop and initiate API calls
+
+    # Create processes for each API call
+    processes = [Process(target=call_api_async, args=(routine, d)) for d in devices]
+    # Start all processes
+    for process in processes:
+        process.start()
+    # Wait for all processes to complete
+    for process in processes:
+        process.join()
+
     if module == "webhook":
-        gather(*calls)
         return 200
     elif module == "controller":
         logger.info(
             f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M%S')}"
         )
-        loop = get_event_loop()  # Main usage
-        loop.run_until_complete(gather(*calls))
 
 
 # API Calls
