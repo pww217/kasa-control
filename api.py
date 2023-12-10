@@ -53,6 +53,8 @@ async def call_api(routine, device):
         b = SmartDimmer(DEVICE_IPS[device])
     elif b.model == "KL125(US)":
         b = SmartBulb(DEVICE_IPS[device])
+    elif b.model == "EP10P4(US)":
+        b = SmartBulb(DEVICE_IPS[device])
     await b.update()
 
     match type:
