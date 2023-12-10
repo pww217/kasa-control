@@ -11,6 +11,10 @@ Devices:
 
   Porch: "10.75.100.146"
 
+  Patio: ""
+  Tree: ""
+  Filter: ""
+
 # [Hue, Saturation] values
 # See https://web.cs.uni-paderborn.de/cgvb/colormaster/web/color-systems/hsv.html
 Colors:
