@@ -137,6 +137,15 @@ TogglePorch:
       Brightness: 100
       Interval: 7
 
+ToggleStrings:
+  Schedule:
+  Devices:
+    PatioStrings:
+      Type: toggle_power
+      Colors: []
+      Brightness: 100
+      Interval: 7
+
 Bright:
   Schedule:
   Devices:
