@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from multiprocessing import Process
 from asyncio import sleep, new_event_loop, set_event_loop
-from kasa import SmartDevice, SmartBulb, SmartDimmer
+from kasa import SmartDevice, SmartBulb, SmartDimmer, SmartPlug
 
 from logger import configure_logger
 from globals import read_config
@@ -53,8 +53,8 @@ async def call_api(routine, device):
         b = SmartDimmer(DEVICE_IPS[device])
     elif b.model == "KL125(US)":
         b = SmartBulb(DEVICE_IPS[device])
-    elif b.model == "EP10P4(US)":
-        b = SmartBulb(DEVICE_IPS[device])
+    elif b.model == "EP10(US)":
+        b = SmartPlug(DEVICE_IPS[device])
     await b.update()
 
     match type:
