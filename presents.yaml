@@ -40,22 +40,22 @@ ImHome:
   Schedule:
   Devices:
     Kitchen:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 20
       Interval: 10
     LivingRoom:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 10
       Interval: 10
     LivingRoomAux:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 40
       Interval: 10
     DiningRoom:
-      Type: power_off
+      Type: power_on
       Colors: []
       Brightness: 20
       Interval: 10
@@ -79,7 +79,7 @@ GoingOut:
       Brightness: 10
       Interval: 10
     LivingRoomAux:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 40
       Interval: 10
@@ -99,7 +99,7 @@ GoingOut:
       Brightness: 35
       Interval: 7
     Porch:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 100
       Interval: 7
@@ -123,7 +123,7 @@ MovieMode:
       Brightness:
       Interval: 10
     LivingRoomAux:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 60
       Interval: 10
@@ -147,25 +147,6 @@ ToggleStrings:
       Interval: 7
 
 Bright:
-  Schedule:
-  Devices:
-    Kitchen:
-      Type: set_brightness
-      Colors: []
-      Brightness: 40
-      Interval: 10
-    LivingRoom:
-      Type: set_brightness
-      Colors: []
-      Brightness: 20
-      Interval: 10
-    LivingRoomAux:
-      Type: set_brightness
-      Colors: []
-      Brightness: 75
-      Interval: 10
-
-Cleaning:
   Schedule:
   Devices:
     Kitchen:
