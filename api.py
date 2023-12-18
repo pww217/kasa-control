@@ -71,16 +71,12 @@ async def call_api(routine, device):
                 await b.turn_on(transition)
             else:
                 await b.set_brightness(1)
-                await b.set_brightness(transition=transition, brightness=brightness)
+                await b.turn_on(transition=transition, brightness=brightness)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Power On | Interval: {interval}"
             )
         case "power_off":
-            if b.model == "EP10(US)":
-                await b.turn_off(transition=transition)
-            else:
-                await b.set_brightness(transition=transition, brightness=brightness)
-                await b.turn_off(transition=transition)
+            await b.turn_off(transition=transition)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Power Off | Interval: {interval}"
             )
