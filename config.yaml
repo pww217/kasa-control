@@ -56,17 +56,17 @@ Routines:
   - Schedule: BeforeSunset
     Devices:
       Kitchen:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 40
         Interval: 15
       LivingRoom:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 20
         Interval: 15
       LivingRoomAux:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 100
         Interval: 15
@@ -74,7 +74,7 @@ Routines:
   - Schedule: Sunset
     Devices:
       Porch:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 100
         Interval: 15

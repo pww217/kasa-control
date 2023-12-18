@@ -150,22 +150,22 @@ Bright:
   Schedule:
   Devices:
     Kitchen:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 70
       Interval: 10
     LivingRoom:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 60
       Interval: 10
     LivingRoomAux:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 100
       Interval: 10
     DiningRoom:
-      Type: set_brightness
+      Type: power_on
       Colors: []
       Brightness: 70
       Interval: 10
@@ -199,6 +199,11 @@ Bedtime:
       Brightness: 15
       Interval: 7
     Office3:
+      Type: power_off
+      Colors: []
+      Brightness: 35
+      Interval: 7
+    PatioStrings:
       Type: power_off
       Colors: []
       Brightness: 35
