@@ -59,16 +59,13 @@ async def call_api(routine, device):
 
     match type:
         case "set_brightness":
-            if b.is_off:
-                await b.set_brightness(1)
-                await b.turn_on()
-            await b.set_brightness(brightness, transition=transition)
+            await b.set_brightness(transition=transition, brightness=brightness)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}"
             )
         case "power_on":
             if b.model == "EP10(US)":
-                await b.turn_on(transition)
+                await b.turn_on(transition=transition)
             else:
                 await b.set_brightness(1)
                 await b.turn_on(transition=transition, brightness=brightness)
@@ -91,7 +88,7 @@ async def call_api(routine, device):
                     await b.set_brightness(1)
                 await b.turn_on(transition=transition)
                 if b.model != "EP10(US)":
-                    await b.set_brightness(brightness, transition=transition)
+                    await b.set_brightness(brightness=brightness, transition=transition)
                 logger.info(
                     f"POST {device}@{DEVICE_IPS[device]} | Toggle On | Interval: {interval}"
                 )
