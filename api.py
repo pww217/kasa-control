@@ -35,7 +35,7 @@ def execute_routine(routine, module="controller"):
         return 200
     elif module == "controller":
         logger.info(
-            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M%S')}"
+            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M')}"
         )
 
 
