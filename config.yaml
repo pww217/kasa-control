@@ -11,6 +11,8 @@ Devices:
 
   Porch: "10.75.100.146"
 
+  PatioStrings: "10.75.100.129"
+
 # [Hue, Saturation] values
 # See https://web.cs.uni-paderborn.de/cgvb/colormaster/web/color-systems/hsv.html
 Colors:
@@ -52,17 +54,17 @@ Routines:
   - Schedule: BeforeSunset
     Devices:
       Kitchen:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 40
         Interval: 15
       LivingRoom:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 20
         Interval: 15
       LivingRoomAux:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 100
         Interval: 15
@@ -70,7 +72,7 @@ Routines:
   - Schedule: Sunset
     Devices:
       Porch:
-        Type: set_brightness
+        Type: power_on
         Colors: []
         Brightness: 100
         Interval: 15

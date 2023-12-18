@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from multiprocessing import Process
 from asyncio import sleep, new_event_loop, set_event_loop
-from kasa import SmartDevice, SmartBulb, SmartDimmer
+from kasa import SmartDevice, SmartBulb, SmartDimmer, SmartPlug
 
 from logger import configure_logger
 from globals import read_config
@@ -53,34 +53,44 @@ async def call_api(routine, device):
         b = SmartDimmer(DEVICE_IPS[device])
     elif b.model == "KL125(US)":
         b = SmartBulb(DEVICE_IPS[device])
+    elif b.model == "EP10(US)":
+        b = SmartPlug(DEVICE_IPS[device])
     await b.update()
 
     match type:
         case "set_brightness":
-            if b.is_off:
-                await b.set_brightness(1)
-                await b.turn_on()
-            await b.set_brightness(brightness, transition=transition)
+            await b.set_brightness(transition=transition, brightness=brightness)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}"
+            )
+        case "power_on":
+            if b.model == "EP10(US)":
+                await b.turn_on(transition=transition)
+            else:
+                await b.set_brightness(1)
+                await b.turn_on(transition=transition, brightness=brightness)
+            logger.info(
+                f"POST {device}@{DEVICE_IPS[device]} | Power On | Interval: {interval}"
             )
         case "power_off":
             await b.turn_off(transition=transition)
             logger.info(
-                f"POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}"
+                f"POST {device}@{DEVICE_IPS[device]} | Power Off | Interval: {interval}"
             )
         case "toggle_power":
             if b.is_on:
                 await b.turn_off(transition=transition)
                 logger.info(
-                    f"POST {device}@{DEVICE_IPS[device]} | Turn Off | Interval: {interval}"
+                    f"POST {device}@{DEVICE_IPS[device]} | Toggle Off | Interval: {interval}"
                 )
             else:
-                await b.set_brightness(1)
-                await b.turn_on()
-                await b.set_brightness(brightness, transition=transition)
+                if b.model != "EP10(US)":
+                    await b.set_brightness(1)
+                await b.turn_on(transition=transition)
+                if b.model != "EP10(US)":
+                    await b.set_brightness(brightness=brightness, transition=transition)
                 logger.info(
-                    f"POST {device}@{DEVICE_IPS[device]} | Turn On | Interval: {interval}"
+                    f"POST {device}@{DEVICE_IPS[device]} | Toggle On | Interval: {interval}"
                 )
         case "smooth_rotate":
             for c in colors:
