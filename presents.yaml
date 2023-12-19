@@ -208,3 +208,8 @@ Bedtime:
       Colors: []
       Brightness: 35
       Interval: 7
+    LivingRoomAux:
+      Type: set_brightness
+      Colors: []
+      Brightness: 50
+      Interval: 7
