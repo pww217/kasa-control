@@ -66,7 +66,7 @@ Routines:
       LivingRoomAux:
         Type: power_on
         Colors: []
-        Brightness: 100
+        Brightness: 75
         Interval: 15
 
   - Schedule: Sunset
@@ -90,7 +90,7 @@ Routines:
       LivingRoomAux:
         Type: set_brightness
         Colors: []
-        Brightness: 50
+        Brightness: 60
         Interval: 10
 
   - Schedule: LateNight
@@ -103,7 +103,7 @@ Routines:
       LivingRoomAux:
         Type: set_brightness
         Colors: []
-        Brightness: 25
+        Brightness: 35
         Interval: 10
 
   - Schedule: Sunrise
