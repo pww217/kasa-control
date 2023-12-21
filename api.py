@@ -59,7 +59,7 @@ async def call_api(routine, device):
 
     match type:
         case "set_brightness":
-            await b.set_brightness(transition=transition, brightness=brightness)
+            await b.set_brightness(brightness=brightness, transition=transition)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Set Brightness | Brightness: {brightness}; Interval: {interval}"
             )
@@ -69,7 +69,7 @@ async def call_api(routine, device):
             else:
                 await b.set_brightness(1)
                 await b.turn_on()
-                await b.set_brightness(transition=transition, brightness=brightness)
+                await b.set_brightness(brightness=brightness, transition=transition)
             logger.info(
                 f"POST {device}@{DEVICE_IPS[device]} | Power On | Interval: {interval}"
             )
