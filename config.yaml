@@ -72,10 +72,10 @@ Routines:
   - Schedule: Sunset
     Devices:
       Porch:
-        Type: power_on
-        Colors: []
+        Type: smooth_rotate
+        Colors: [Green, Red]
         Brightness: 100
-        Interval: 15
+        Interval: 7
 
       Kitchen:
         Type: set_brightness
