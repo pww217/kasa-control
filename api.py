@@ -24,19 +24,18 @@ def execute_routine(routine, module="controller"):
 
     # Create processes for each API call
     processes = [Process(target=call_api_async, args=(routine, d)) for d in devices]
+    if module == "controller":
+        logger.info(
+            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M')}"
+        )
     # Start all processes
     for process in processes:
         process.start()
     # Wait for all processes to complete
     for process in processes:
         process.join()
-
     if module == "webhook":
         return 200
-    elif module == "controller":
-        logger.info(
-            f"Executing Routine {routine['Schedule']} on {datetime.now().strftime('%A at %H:%M')}"
-        )
 
 
 # API Calls
