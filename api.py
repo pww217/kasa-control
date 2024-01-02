@@ -71,6 +71,8 @@ async def call_api(routine, device):
         case "power_on":
             if b.model == "EP10(US)":
                 await b.turn_on()
+            if b.is_on:
+                await b.set_brightness(brightness=brightness, transition=transition)
             else:
                 await b.set_brightness(1)
                 await b.turn_on()
