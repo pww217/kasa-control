@@ -203,11 +203,6 @@ Bedtime:
       Colors: []
       Brightness: 35
       Interval: 7
-    PatioStrings:
-      Type: power_off
-      Colors: []
-      Brightness: 35
-      Interval: 7
     LivingRoomAux:
       Type: set_brightness
       Colors: []

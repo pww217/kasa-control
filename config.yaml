@@ -98,6 +98,22 @@ Routines:
         Brightness: 60
         Interval: 10
 
+      OfficeTop:
+        Type: set_brightness
+        Colors: []
+        Brightness: 20
+        Interval: 7
+      Office2:
+        Type: set_brightness
+        Colors: []
+        Brightness: 10
+        Interval: 7
+      Office3:
+        Type: set_brightness
+        Colors: []
+        Brightness: 35
+        Interval: 7
+
   - Schedule: LateNight
     Devices:
       Porch:
