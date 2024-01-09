@@ -50,7 +50,24 @@ Schedules:
       End: Sunrise
 
 Routines:
-
+  - Schedule: StartWorkday
+    Devices:
+      OfficeTop:
+        Type: toggle_power
+        Colors: []
+        Brightness: 50
+        Interval: 7
+      Office2:
+        Type: toggle_power
+        Colors: []
+        Brightness: 40
+        Interval: 7
+      Office3:
+        Type: toggle_power
+        Colors: []
+        Brightness: 70
+        Interval: 7
+      
   - Schedule: BeforeSunset
     Devices:
       Kitchen:
