@@ -12,6 +12,7 @@ on:
       - presents.yaml
       - server.py
       - webhook.py
+      - requirement-webhook.txt
 
   workflow_dispatch:
 
