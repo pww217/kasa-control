@@ -53,17 +53,17 @@ Routines:
   - Schedule: StartWorkday
     Devices:
       OfficeTop:
-        Type: toggle_power
+        Type: power_on
         Colors: []
         Brightness: 50
         Interval: 7
       Office2:
-        Type: toggle_power
+        Type: power_on
         Colors: []
         Brightness: 40
         Interval: 7
       Office3:
-        Type: toggle_power
+        Type: power_on
         Colors: []
         Brightness: 70
         Interval: 7
