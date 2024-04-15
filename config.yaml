@@ -67,7 +67,7 @@ Routines:
         Colors: []
         Brightness: 70
         Interval: 7
-      
+
   - Schedule: BeforeSunset
     Devices:
       Kitchen:
