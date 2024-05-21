@@ -55,17 +55,17 @@ Routines:
       OfficeTop:
         Type: power_on
         Colors: []
-        Brightness: 50
+        Brightness: 90
         Interval: 7
       Office2:
         Type: power_on
         Colors: []
-        Brightness: 40
+        Brightness: 80
         Interval: 7
       Office3:
         Type: power_on
         Colors: []
-        Brightness: 70
+        Brightness: 100
         Interval: 7
 
   - Schedule: BeforeSunset
